@@ -37,6 +37,11 @@
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" id="address" class="form-control form-control-lg" name="address" th:field="*{address}"/>
+                  <label class="form-label" for="address">Nhập địa chỉ</label>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-4">
                   <input type="tel" id="sdt" class="form-control form-control-lg" th:field="*{sdt}" />
                   <label class="form-label" for="sdt">Nhập số điện thoại</label>
                 </div>
@@ -50,6 +55,7 @@
                   <input type="password" id="passAgain" class="form-control form-control-lg" name="passAgain" />
                   <label class="form-label" for="passAgain">Nhập lại mật khẩu</label>
                 </div>
+
                 <script th:inline="javascript">
                   function validateForm() {
                     var inputs = document.getElementsByTagName("input"); // Lấy tất cả các input trong form

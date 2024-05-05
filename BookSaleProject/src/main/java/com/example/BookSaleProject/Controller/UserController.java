@@ -142,7 +142,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/userInfo")
-    public String userInfo(Model model) {
-        return "UserInfo";
+    public String userInfo(Model model, HttpServletRequest request) {
+        return "UserInfor";
     }
 }
