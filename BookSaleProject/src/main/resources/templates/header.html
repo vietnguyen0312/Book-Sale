@@ -95,7 +95,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">  
+                                    <div class="col-sm-4">
                                         <a href="" style="text-decoration: none; color: white; font-size: small;"
                                             onmouseover=" this.style.textDecoration='underline'"
                                             onmouseout=" this.style.textDecoration='none'">GIỚI
@@ -123,14 +123,12 @@
                                 </div>
                                 <div th:unless="${session.userEmail==null}">
                                     <div class="dropdown">
-                                        <a
-                                            style="text-decoration: none; color: white;cursor: pointer;
+                                        <a style="text-decoration: none; color: white;cursor: pointer;
                                             overflow: hidden;text-overflow: ellipsis;max-width: 110px;">
                                             <i class="fa-solid fa-user"></i>
-                                            <p th:text="'  '+${session.userName}"
-                                                    style="display: inline-flex;font-family:Arial, Helvetica, sans-serif;
+                                            <p th:text="'  '+${session.userName}" style="display: inline-flex;font-family:Arial, Helvetica, sans-serif;
                                                     font-weight: lighter;">
-                                                </p>
+                                            </p>
                                         </a>
                                         <div class="dropdown-content">
                                             <div>
@@ -156,8 +154,8 @@
                                     <a th:href="@{/cart/viewCart}"
                                         style="text-decoration: none; color: white; font-size: small;"
                                         onmouseover=" this.style.textDecoration='underline'"
-                                        onmouseout=" this.style.textDecoration='none'" id="panier" href="javascript:void(0)"><i
-                                            class="fa-solid fa-cart-shopping"></i>GIỎ HÀNG</a>
+                                        onmouseout=" this.style.textDecoration='none'" id="panier"
+                                        href="javascript:void(0)"><i class="fa-solid fa-cart-shopping"></i>GIỎ HÀNG</a>
                                 </div>
                                 <div th:unless="${session.userEmail!= null}">
                                     <a th:href="@{/user/}"
@@ -179,7 +177,8 @@
                 <div class="row">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-11" id="search-bar" style="display: none; border: none;">
-                        <input type="text" placeholder="Nhập từ khóa tìm kiếm" style="width: 1000px;" onkeydown="">
+                        <input type="search" placeholder="Nhập từ khóa tìm kiếm" style="width: 1000px;border: #01a14b;"
+                            onkeyup="handleSearch(event)" id="keyword">
                         <button onclick="cancelBar()" style="color: black; background-color: white;">Cancel</button>
                     </div>
 

@@ -60,7 +60,7 @@
     </div>
     <div class="row" style="padding-top: 20px;">
         <div class="col-sm-1"></div>
-        <div class="col-sm-2">
+        <div class="col-sm-2" th:unless="${title.contains('Kết quả tìm kiếm')}">
             <div style="width: fit-content;" class="accordion">
                 <button>
                     <i class="fa-solid fa-list" style="font-size: 20px;">
@@ -98,10 +98,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col">
             <p class="h3" th:text="${title}" style="padding: 0 0 20px 0;font-family: Arial, Helvetica, sans-serif;"></p>
             <div class="row">
-                <div th:each="book, status : ${BookRate}" class="col-sm-4" style="padding-top: 20px; ">
+                <div th:each="book, status : ${BookRate}"
+                    th:class="${title.contains('Kết quả tìm kiếm')} ? 'col-sm-3' : 'col-sm-4'"
+                    style="padding-top: 20px; ">
                     <div class="card" style="width:300px;" data-mdb-toggle="animation" data-mdb-animation-reset="true"
                         data-mdb-animation="slide-right">
                         <button type="button" data-bs-toggle="modal" th:data-bs-target="|#bookModal${status.index}|">
@@ -345,6 +347,7 @@
     <script th:src="@{/js/Directory.js}"></script>
     <script th:src="@{/js/reUse.js}"></script>
     <script th:src="@{/js/spinButton.js}"></script>
+    <script th:src="@{/js/Search.js}"></script>
 </body>
 
 </html>

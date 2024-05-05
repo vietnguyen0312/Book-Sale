@@ -3,7 +3,6 @@ package com.example.BookSaleProject.Controller;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.BookType;
@@ -84,21 +80,21 @@ public class BookController {
 
     @GetMapping(value = { "/getBookList/{pageNum}" })
     public String getBookList(Model model, @PathVariable(value = "pageNum") String currentPage) {
-        int numPages = (int) Math.ceil((double) bookList.size() / 9);
+        int numPages = (int) Math.ceil((double) bookList.size() / 12);
         int[] numPage = new int[numPages];
         for (int i = 0; i < numPages; i++) {
             numPage[i] = i + 1;
         }
 
         ArrayList<Book> bookListPage = new ArrayList<>();
-        for (int i = (Integer.parseInt(currentPage) - 1) * 9; i < Integer.parseInt(currentPage) * 9; i++) {
+        for (int i = (Integer.parseInt(currentPage) - 1) * 12; i < Integer.parseInt(currentPage) * 12; i++) {
             if (bookList.size() <= i)
                 break;
             bookListPage.add(bookList.get(i));
         }
         bookRate.clear();
         for (Book book : bookListPage) {
-            bookRate.put(book, rateService.getScoreByIdBook(book));
+            bookRate.put(book,(rateService.getScoreByIdBook(book)));
         }
 
         ArrayList<String> nxbList = new ArrayList<>();
@@ -205,13 +201,13 @@ public class BookController {
         return getBookList(model, "1");
     }
 
-    // @RequestMapping(value = "/search", method = RequestMethod.GET)
-    // @ResponseBody
-    // public ModelAndView search(@RequestParam("value")String value){
-    //     ModelAndView modelAndView = new ModelAndView();
-    //     modelAndView.setViewName("fragments/searchFragment");
-    //     List<Book> books;
-    // }
+    @GetMapping(value = "/search")
+    public String searchBook(Model model, @RequestParam("keyword")String keyword) {
+        bookList.clear();
+        title = "Kết quả tìm kiếm ("+keyword+")";
+        bookList = bookService.search(keyword);
+        return getBookList(model, "1") ;
+    }
 
     @PostMapping(value = { "/updateBook" })
     public String updateBook(Model model, @ModelAttribute("bookFinded") Book book) {

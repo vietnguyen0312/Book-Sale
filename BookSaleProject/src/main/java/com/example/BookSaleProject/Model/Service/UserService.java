@@ -74,7 +74,7 @@ public class UserService implements IUserService {
         }
         return false;
     }
-
+    
     private static final Predicate<String> EMAIL_VALIDATOR = email -> email
             .matches("^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,}$");
 

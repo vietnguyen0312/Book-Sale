@@ -38,4 +38,3 @@ $('.modal').on('hidden.bs.modal', function () {
 
 
 
-

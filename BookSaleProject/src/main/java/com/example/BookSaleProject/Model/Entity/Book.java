@@ -5,7 +5,7 @@ public class Book {
     @Override
     public String toString() {
         return "Book [id=" + id + ", name=" + name + ", author=" + author + ", bookType=" + bookType + ", date=" + date
-                + ", nxb=" + nxb + ", price=" + price + ", SL=" + SL + ", img=" + img + ", detail=" + detail + "]";
+                + ", nxb=" + nxb + ", price=" + price + ", SL=" + SL + ", img=" + img + ", detail=" + detail + "]"+"\n";
     }
     public Book(int id, String name, String author, BookType bookType, String date, String nxb, double price, int sL,
             String img, String detail) {
@@ -93,5 +93,19 @@ public class Book {
         this.detail = detail;
     }
 
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Book book = (Book) obj;
+        return id == book.id;
+    }
+
+    @Override
+    public int hashCode() {
+        String idBook = ""+id;
+        return idBook.hashCode();
+    }
 }
