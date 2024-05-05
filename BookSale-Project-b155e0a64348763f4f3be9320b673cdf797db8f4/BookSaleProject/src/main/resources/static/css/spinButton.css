@@ -1,0 +1,17 @@
+icon-shape {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; 
+    text-align: center;
+    vertical-align: middle;
+}
+
+.icon-sm {
+    width: 45px; /* Đổi kích thước chiều rộng thành 5rem */
+    height: 50px; /* Đổi kích thước chiều cao thành 5rem */
+    background-color: #333; /* Màu nền đen (có thể thay đổi thành màu khác nếu cần) */
+    border: none; /* Loại bỏ viền */
+    color: white; /* Màu chữ (có thể thay đổi nếu cần) */
+    font-size: 20px; /* Cỡ chữ */
+    cursor: pointer; /* Biểu tượng con trỏ khi rê chuột */
+}

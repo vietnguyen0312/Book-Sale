@@ -1,0 +1,14 @@
+.col-md-2{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.orderDetail{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 8px;
+}
+.card:hover{
+    transform: none;
+}

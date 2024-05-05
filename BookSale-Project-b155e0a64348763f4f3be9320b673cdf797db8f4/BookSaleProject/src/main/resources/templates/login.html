@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>My Login Page</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+</head>
+
+
+<body class="my-login-page">
+
+	<section class="h-100">
+		
+		<div class="container h-100">
+			<div class="row justify-content-md-center h-100">
+				<div class="card-wrapper">
+					<div class="brand">
+						<div th:if="${Message} != null">
+							<h3 class="text-danger text-center" th:text="${Message}"></h3>
+						</div>
+						<div th:unless="${Message} != null">
+							<h3 class="text-danger text-center">Welcome You</h3>
+						</div>
+
+					</div>
+					<div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title">Login</h4>
+							<form th:method="post" class="my-login-validation" th:action="@{/user/login}"
+								th:object="${user}">
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input id="email" type="email" class="form-control" th:field="*{email}"
+										name="email">
+								</div>
+
+								<div class="form-group">
+									<label for="password">Password
+										<a href="#" class="float-right">
+											Forgot Password?
+										</a>
+									</label>
+									<input id="password" type="password" class="form-control" name="password"
+										th:field="*{password}">
+								</div>
+
+								<div class="form-group">
+									<div class="custom-checkbox custom-control">
+										<input type="checkbox" name="rememberme" id="remember"
+											class="custom-control-input">
+										<label for="remember" class="custom-control-label">Remember Me</label>
+									</div>
+								</div>
+
+								<div class="form-group m-0">
+									<button type="submit" class="btn btn-primary btn-block">
+										Login
+									</button>
+								</div>
+								<div class="mt-4 text-center">
+									Don't have an account? <a th:href="@{/user/showRegist}">Create One</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+
+</html>
