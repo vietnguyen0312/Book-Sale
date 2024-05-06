@@ -37,8 +37,9 @@
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" id="address" class="form-control form-control-lg" name="address" th:field="*{address}"/>
-                  <label class="form-label" for="address">Nhập địa chỉ</label>
+                  <input type="text" id="autocomplete" class="form-control form-control-lg" name="address"
+                    th:field="*{address}" />
+                  <label class="form-label" for="autocomplete">Nhập địa chỉ</label>
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
@@ -67,38 +68,38 @@
                     }
                     return true; // Cho phép form được gửi đi nếu tất cả các trường được điền đầy đủ
                   }
-                  
-                  
 
-                    var mess = /*[[${messages}]]*/ {};
 
-                // Nếu có lỗi, hiển thị chúng
-                if (mess.trim() !== '') {
+
+                  var mess = /*[[${messages}]]*/ {};
+
+                  // Nếu có lỗi, hiển thị chúng
+                  if (mess.trim() !== '') {
                     var errorFields = mess.split(' ');
                     errorFields.forEach(function (element) {
-                        console.log(element);
-                        if (element.includes("email") ) {
-                          document.getElementById("email").style.borderColor = "red";
-                        }
-                        if (element.includes("duplicate")) {
-                          document.getElementById("email").style.borderColor = "red";
-                          alert("Email đã tồn tại")
-                        }
-                        if (element.includes("sdt")) {
-                          document.getElementById("sdt").style.borderColor = "red";
-                        }
-                        if (element.includes("errorpassword")) {
-                          document.getElementById("passAgain").style.borderColor = "red";
-                        }
-                        if (element.includes("password")) {
-                          document.getElementById("password").style.borderColor = "red";
-                        }
+                      console.log(element);
+                      if (element.includes("email")) {
+                        document.getElementById("email").style.borderColor = "red";
+                      }
+                      if (element.includes("duplicate")) {
+                        document.getElementById("email").style.borderColor = "red";
+                        alert("Email đã tồn tại")
+                      }
+                      if (element.includes("sdt")) {
+                        document.getElementById("sdt").style.borderColor = "red";
+                      }
+                      if (element.includes("errorpassword")) {
+                        document.getElementById("passAgain").style.borderColor = "red";
+                      }
+                      if (element.includes("password")) {
+                        document.getElementById("password").style.borderColor = "red";
+                      }
                     });
-                } else {
+                  } else {
                     // Nếu không có lỗi, gửi form đi
                     event.target.submit();
-                }
-                  
+                  }
+
                 </script>
                 <div class="d-flex justify-content-center">
                   <button type="submit" data-mdb-button-init data-mdb-ripple-init
@@ -114,6 +115,48 @@
       </div>
     </div>
   </div>
+  <script>
+    let autocomplete;
+    function initAutocomplete() {
+      autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById('autocomplete'),
+        {
+          types: ['establishment'],
+          componentRestrictions: { 'country': ['AU'] },
+          fields: ['place_id', 'geometry', 'name']
+        });
+
+      autocomplete.addListener('place_changed', onPlaceChanged);
+    }
+
+    function onPlaceChanged() {
+      var place = autocomplete.getPlace();
+
+      if (!place.geometry) {
+        document.getElementById('autocomplete').placeholder = 'Enter a place';
+      } else {
+        document.getElementById('details').innerHTML = place.name;
+      }
+
+      var service = new goole.maps.places.AutocompleteService();
+
+      service.getQueryPredictions(
+        { input: 'user address' },
+        displaySuggestions
+      );
+
+      var displaySuggestions = (predictions, status) => {
+        if (status === goole.maps.places.PlacesServiceStatus.OK) {
+          predictions.forEach((prediction) => {
+            console.log(prediction.description);
+          });
+        }
+      };
+    }
+  </script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbTk7k0oLZ9EuJNOlpxwczbV2dIp75TyY&loading=async&libraries=places&callback=initMap">
+    </script>
 </body>
 
 </html>

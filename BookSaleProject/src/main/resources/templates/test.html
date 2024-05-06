@@ -4,14 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông báo</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEIacE7dR8F4pErsabZ_82_WDzM7lrdfI&libraries-places"></script>
+    <title>Document</title>
 </head>
 
 <body>
+    <input type="text" id="location">
 
-    <i class="material-icons">cặc</i>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var autocomplete;
+            var id = 'location';
 
+            autocomplete = new google.maps.places.Autocomplete(document.getElementById(id), {
+                types: ['geocode'],
+            });
+        });
+    </script>
 </body>
 
 </html>

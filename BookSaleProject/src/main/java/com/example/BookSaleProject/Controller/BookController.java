@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,7 +74,7 @@ public class BookController {
         model.addAttribute("bookTypeList", bookTypeList);
         model.addAttribute("newBookList", bookRate);
         model.addAttribute("favouriteBookList", topRatedBooks);
-        return "index";
+        return "test";
     }
 
     @GetMapping(value = { "/getBookList/{pageNum}" })
@@ -210,8 +209,8 @@ public class BookController {
     }
 
     @PostMapping(value = { "/updateBook" })
-    public String updateBook(Model model, @ModelAttribute("bookFinded") Book book) {
-        bookService.update(book);
+    public String updateBook(Model model, @RequestParam("bookFinded") String id) {
+        
         return "";
     }
 
