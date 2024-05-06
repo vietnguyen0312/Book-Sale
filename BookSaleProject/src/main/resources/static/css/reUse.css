@@ -68,3 +68,39 @@ iframe {
     font-weight: lighter;
 }
 
+#suggestionBox {
+    position: absolute;
+    z-index: 9999;
+    background-color: white;
+    font-size: larger;
+    display: inline-flex;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    width: 20%
+}
+
+#suggestionBox div:hover {
+    background-color: #f0f0f0; /* Màu nền khi di chuột vào */
+    cursor: pointer; /* Con trỏ chuột thành bàn tay khi di chuột vào */
+}
+
+#suggestionBox div.active {
+    background-color: #e0e0e0; /* Màu nền khi gợi ý được chọn */
+}
+
+#suggestionBox div:focus {
+    outline: none; /* Loại bỏ viền xung quanh khi gợi ý được focus */
+}
+
+#suggestionBox div {
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền trong 0.3s */
+}
+
+#suggestionBox a{
+    display: inline;
+    overflow: hidden; /* Ẩn phần vượt quá kích thước */
+    text-overflow: ellipsis; /* Thêm dấu "..." khi văn bản bị cắt ngắn */
+    max-width: 100px;
+}
+
+

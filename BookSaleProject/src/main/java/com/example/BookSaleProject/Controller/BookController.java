@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,7 +75,7 @@ public class BookController {
         model.addAttribute("bookTypeList", bookTypeList);
         model.addAttribute("newBookList", bookRate);
         model.addAttribute("favouriteBookList", topRatedBooks);
-        return "test";
+        return "index";
     }
 
     @GetMapping(value = { "/getBookList/{pageNum}" })
@@ -93,7 +94,7 @@ public class BookController {
         }
         bookRate.clear();
         for (Book book : bookListPage) {
-            bookRate.put(book,(rateService.getScoreByIdBook(book)));
+            bookRate.put(book, (rateService.getScoreByIdBook(book)));
         }
 
         ArrayList<String> nxbList = new ArrayList<>();
@@ -115,7 +116,7 @@ public class BookController {
     }
 
     @GetMapping(value = { "/getBookById/{id}" })
-    public String getBookById(Model model, @PathVariable(value = "id")String id) {
+    public String getBookById(Model model, @PathVariable(value = "id") String id) {
         Book book = bookService.getByID(Integer.parseInt(id));
         BookType bookType = book.getBookType();
         ArrayList<Book> bookListSame = new ArrayList<>();
@@ -201,16 +202,28 @@ public class BookController {
     }
 
     @GetMapping(value = "/search")
-    public String searchBook(Model model, @RequestParam("keyword")String keyword) {
+    public String searchBook(Model model, @RequestParam("keyword") String keyword) {
         bookList.clear();
-        title = "Kết quả tìm kiếm ("+keyword+")";
+        title = "Kết quả tìm kiếm (" + keyword + ")";
         bookList = bookService.search(keyword);
-        return getBookList(model, "1") ;
+        return getBookList(model, "1");
+    }
+
+    @GetMapping(value = "/suggestion")
+    public ResponseEntity<ArrayList<Book>> searchBook(@RequestParam("keyword") String keyword) {
+        ArrayList<Book> searchResult = bookService.search(keyword);
+        return ResponseEntity.ok().body(searchResult);
+    }
+
+    @GetMapping(value = "/recomendation")
+    public ResponseEntity<ArrayList<Book>> recomendationBook(@RequestParam("keyword") String keyword) {
+        ArrayList<Book> searchResult = bookService.search(keyword);
+        return ResponseEntity.ok().body(searchResult);
     }
 
     @PostMapping(value = { "/updateBook" })
     public String updateBook(Model model, @RequestParam("bookFinded") String id) {
-        
+
         return "";
     }
 

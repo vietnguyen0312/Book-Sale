@@ -17,9 +17,8 @@ public class BookRepository {
     @Autowired
     BookTypeRepository bookTypeRepository = new BookTypeRepository();
 
+    public ArrayList<Book> getAll() {
 
-    public ArrayList<Book> getAll(){
-        
         try {
             bookList.clear();
             Class.forName(BaseConnection.nameClass);
@@ -38,7 +37,7 @@ public class BookRepository {
                 int SL = resultSet.getInt("SL");
                 String img = resultSet.getString("img");
                 String detail = resultSet.getString("detail");
-                Book book = new Book(id, name, author, bookType, date, nxb, price, SL, img,detail);
+                Book book = new Book(id, name, author, bookType, date, nxb, price, SL, img, detail);
                 bookList.add(book);
             }
             con.close();
@@ -48,15 +47,15 @@ public class BookRepository {
         return bookList;
     }
 
-    public Book getByID(int id){
+    public Book getByID(int id) {
         try {
             Class.forName(BaseConnection.nameClass);
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
                     BaseConnection.password);
             PreparedStatement prsm = con.prepareStatement("Select * from BOOKSALE.Book where id=?");
-            prsm.setInt(1, id );
+            prsm.setInt(1, id);
             ResultSet resultSet = prsm.executeQuery();
-            if(!resultSet.next()){
+            if (!resultSet.next()) {
                 throw new IllegalArgumentException("Cannot Find");
             }
             String name = resultSet.getString("name");
@@ -78,18 +77,19 @@ public class BookRepository {
         return null;
     }
 
-    public boolean addNew(Book book){
+    public boolean addNew(Book book) {
         try {
             Class.forName(BaseConnection.nameClass);
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
                     BaseConnection.password);
-            PreparedStatement prsm = con.prepareStatement("Insert into BOOKSALE.Book (name,author,booktype,date,nxb,price,SL,img) values (?,?,?,?,?,?,?,?)");
-            prsm.setString(1,book.getName());
+            PreparedStatement prsm = con.prepareStatement(
+                    "Insert into BOOKSALE.Book (name,author,booktype,date,nxb,price,SL,img) values (?,?,?,?,?,?,?,?)");
+            prsm.setString(1, book.getName());
             prsm.setString(2, book.getAuthor());
             prsm.setInt(3, book.getBookType().getId());
             prsm.setString(4, book.getDate());
             prsm.setString(5, book.getNxb());
-            prsm.setString(6, ""+book.getPrice());
+            prsm.setString(6, "" + book.getPrice());
             prsm.setInt(7, book.getSL());
             prsm.setString(8, book.getImg());
             int result = prsm.executeUpdate();
@@ -107,8 +107,9 @@ public class BookRepository {
             Class.forName(BaseConnection.nameClass);
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
                     BaseConnection.password);
-            PreparedStatement prsm = con.prepareStatement("Update BOOKSALE.Book set name=?,author=?,booktype=?,date=?,nxb=?,price=?,SL=?,img=?,detail=? where id =?");
-            prsm.setString(1,book.getName());
+            PreparedStatement prsm = con.prepareStatement(
+                    "Update BOOKSALE.Book set name=?,author=?,booktype=?,date=?,nxb=?,price=?,SL=?,img=?,detail=? where id =?");
+            prsm.setString(1, book.getName());
             prsm.setString(2, book.getAuthor());
             prsm.setInt(3, book.getBookType().getId());
             prsm.setString(4, book.getDate());
@@ -126,5 +127,4 @@ public class BookRepository {
         }
         return false;
     }
-
 }

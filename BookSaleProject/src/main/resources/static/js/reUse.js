@@ -10,12 +10,18 @@ function showSearchBar() {
 }
 function cancelBar() {
     var searchBar = document.getElementById("search-bar");
+    var inputKeyword = document.getElementById("keyword");
+    var suggestionBox = document.getElementById("suggestionBox");
     if (searchBar.style.display === "block") {
         searchBar.style.display = "none";
+        inputKeyword.value = "";
+        suggestionBox.innerHTML = "";
         displayButton.style.display = "block"
         all.style.display = "block"
     }
 }
+
+
 function removeAnimation(element) {
     element.removeAttribute('data-mdb-toggle');
 }

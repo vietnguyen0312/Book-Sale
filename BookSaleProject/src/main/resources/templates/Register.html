@@ -37,9 +37,9 @@
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" id="autocomplete" class="form-control form-control-lg" name="address"
+                  <input type="text" id="location" class="form-control form-control-lg" name="address"
                     th:field="*{address}" />
-                  <label class="form-label" for="autocomplete">Nhập địa chỉ</label>
+                  <label class="form-label" for="location">Nhập địa chỉ</label>
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
@@ -116,46 +116,16 @@
     </div>
   </div>
   <script>
-    let autocomplete;
-    function initAutocomplete() {
-      autocomplete = new google.maps.places.Autocomplete(
-        document.getElementById('autocomplete'),
-        {
-          types: ['establishment'],
-          componentRestrictions: { 'country': ['AU'] },
-          fields: ['place_id', 'geometry', 'name']
-        });
-
-      autocomplete.addListener('place_changed', onPlaceChanged);
-    }
-
-    function onPlaceChanged() {
-      var place = autocomplete.getPlace();
-
-      if (!place.geometry) {
-        document.getElementById('autocomplete').placeholder = 'Enter a place';
-      } else {
-        document.getElementById('details').innerHTML = place.name;
-      }
-
-      var service = new goole.maps.places.AutocompleteService();
-
-      service.getQueryPredictions(
-        { input: 'user address' },
-        displaySuggestions
-      );
-
-      var displaySuggestions = (predictions, status) => {
-        if (status === goole.maps.places.PlacesServiceStatus.OK) {
-          predictions.forEach((prediction) => {
-            console.log(prediction.description);
-          });
-        }
-      };
-    }
+    $(document).ready(function () {
+      var autocomplete;
+      var id = 'location';
+      autocomplete = new google.maps.places.Autocomplete(document.getElementById(id), {
+        types: ['geocode'],
+      });
+    });
   </script>
   <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbTk7k0oLZ9EuJNOlpxwczbV2dIp75TyY&loading=async&libraries=places&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEIacE7dR8F4pErsabZ_82_WDzM7lrdfI&loading=async&libraries=places&callback=initMap">
     </script>
 </body>
 

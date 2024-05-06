@@ -64,10 +64,23 @@ public class BookService implements IBookService {
         return p -> p.getAuthor().toLowerCase().contains(keyword.toLowerCase());
     }
 
+    private static Predicate<Book> filterByNxb(String keyword) {
+        return p -> p.getNxb().toLowerCase().contains(keyword.toLowerCase());
+    }
+
+    private static Predicate<Book> filterByPrice(String keyword) {
+        return p -> {
+            double price = p.getPrice();
+            String lowerKeyword = keyword.toLowerCase();
+            String priceString = String.valueOf(price).toLowerCase();
+            return priceString.contains(lowerKeyword);
+        };
+    }
+
     private ArrayList<Book> filterBooks(String keyword, Predicate<Book> predicate) {
         ArrayList<Book> filteredBooks = new ArrayList<>();
         ArrayList<Book> ListOfBooks = getAll();
-        for (Book book : ListOfBooks) { // Thay yourListOfBooks bằng danh sách thực tế của bạn
+        for (Book book : ListOfBooks) {
             if (predicate.test(book)) {
                 filteredBooks.add(book);
             }
@@ -76,11 +89,12 @@ public class BookService implements IBookService {
     }
 
     public ArrayList<Book> search(String keyword) {
-        HashSet<Book> uniqueBooks = new HashSet<>(); // Set để loại bỏ các quyển sách trùng lặp
-        // Lọc theo tên sách
+        HashSet<Book> uniqueBooks = new HashSet<>();
         uniqueBooks.addAll(filterBooks(keyword, filterByName(keyword)));
         uniqueBooks.addAll(filterBooks(keyword, filterByType(keyword)));
         uniqueBooks.addAll(filterBooks(keyword, filterByAuthor(keyword)));
-        return new ArrayList<>(uniqueBooks); // Chuyển Set thành ArrayList
+        uniqueBooks.addAll(filterBooks(keyword, filterByNxb(keyword)));
+        uniqueBooks.addAll(filterBooks(keyword, filterByPrice(keyword)));
+        return new ArrayList<>(uniqueBooks);
     }
 }
