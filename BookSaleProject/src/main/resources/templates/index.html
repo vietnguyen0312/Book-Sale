@@ -23,6 +23,29 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script th:src="@{/js/spinButton.js}"></script>
 </head>
+<style>
+  #popchat {
+    position: absolute;
+    background-color: white;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #01a14b;
+    text-align: center;
+    width: 90%;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 600;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    opacity: 0;
+    transition: 0.5s;
+  }
+
+  #popchat.active {
+    opacity: 1;
+    top: 10px;
+  }
+</style>
 
 <body>
   <header th:insert="~{header :: header}"></header>
@@ -233,12 +256,14 @@
                     </div>
                     <div th:unless="${session.userEmail==null}">
                       <div th:if="${book.key.SL}!=0">
-                        <form th:action="@{/cart/add/__${book.key.id}__}" th:method="post">
-                          <input type="hidden" name="SL" value="1">
-                          <button type="submit" style="padding-right: 0px;float: right;"
-                            onmouseover="this.style.color='#01a14b';" onmouseout="this.style.color='black';">
-                            <i class="fa-solid fa-cart-shopping" style="font-size:x-large;"></i></button>
-                        </form>
+                        <button th:onclick="'addToCart(' + ${book.key.id} + ')'" id="btnAdd"
+                          style="padding-right: 0px;float: right;" onmouseover="this.style.color='#01a14b';"
+                          onmouseout="this.style.color='black';">
+                          <i class="fa-solid fa-cart-shopping" style="font-size:x-large;"></i></button>
+                        <div id="popchat">
+                          <i class="fa-solid fa-square-check" style="background-color: #01a14b;">Đã thêm thành công</i>
+                        </div>
+
                       </div>
                       <div th:unless="${book.key.SL}!=0">
                         <button onclick="alert('Hết Hàng')" style="padding-right: 0px;float: right;"
@@ -441,12 +466,13 @@
                     </div>
                     <div th:unless="${session.userEmail==null}">
                       <div th:if="${book.key.SL}!=0">
-                        <form th:action="@{/cart/add/__${book.key.id}__}" th:method="post">
-                          <input type="hidden" name="SL" value="1">
-                          <button type="submit" style="padding-right: 0px;float: right;"
-                            onmouseover="this.style.color='#01a14b';" onmouseout="this.style.color='black';">
-                            <i class="fa-solid fa-cart-shopping" style="font-size:x-large;"></i></button>
-                        </form>
+                        <button th:onclick="'addToCart(' + ${book.key.id} + ')'" id="btnAdd"
+                          style="padding-right: 0px;float: right;" onmouseover="this.style.color='#01a14b';"
+                          onmouseout="this.style.color='black';">
+                          <i class="fa-solid fa-cart-shopping" style="font-size:x-large;"></i></button>
+                        <div id="popchat">
+                          <i class="fa-solid fa-square-check" style="background-color: #01a14b;">Đã thêm thành công</i>
+                        </div>
                       </div>
                       <div th:unless="${book.key.SL}!=0">
                         <button onclick="alert('Hết Hàng')" style="padding-right: 0px;float: right;"
@@ -475,6 +501,32 @@
 
   <script th:src="@{/js/reUse.js}"></script>
   <script th:src="@{/js/Search.js}"></script>
+
+  <script th:inline="javascript">
+    function addToCart(id) {
+      const btn = document.querySelector("#btnAdd");
+      const pop = document.querySelector("#popchat");
+      
+      pop.classList.add("active");
+      setTimeout(() => {
+        pop.classList.remove("active");
+      }, 2000);
+      var xhr = new XMLHttpRequest();
+      console.log(id)
+      xhr.open("POST", "/cart/add", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          // Xử lý phản hồi từ máy chủ
+          console.log(response.message);
+        }
+      };
+      xhr.send(JSON.stringify({ id: id }));
+    }
+
+
+  </script>
 </body>
 
 </html>

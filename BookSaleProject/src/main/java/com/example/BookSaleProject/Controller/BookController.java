@@ -205,15 +205,8 @@ public class BookController {
     public String searchBook(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
         bookList.clear();
         title = "Kết quả tìm kiếm (" + keyword + ")";
-        System.out.println(keyword);
         bookList = bookService.search(keyword);
         return getBookList(model, "1");
-    }
-
-    @GetMapping(value = "/suggestion")
-    public ResponseEntity<ArrayList<Book>> searchBook(@RequestParam("keyword") String keyword) {
-        ArrayList<Book> searchResult = bookService.search(keyword);
-        return ResponseEntity.ok().body(searchResult);
     }
 
     @GetMapping(value = "/recomendation")

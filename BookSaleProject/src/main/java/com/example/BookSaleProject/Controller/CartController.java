@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.CartProBox;
 import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BookService;
@@ -89,23 +92,25 @@ public class CartController {
         return viewCart(model, request);
     }
 
-    @PostMapping(value = "/add/{id}")
-    public String addBook(Model model, @PathVariable(value = "id") String id, HttpServletRequest request,
-            @RequestParam(name = "SL") String SL) {
-        int idBook = Integer.parseInt(id);
+    @PostMapping(value = "/add")
+    public ResponseEntity<Integer> addBook(@RequestBody Book book, HttpServletRequest request
+            ) {
+        
+        int idBook = book.getId();
+        System.out.println(book.getId());
         for (CartProBox cartProBox : cartProBoxs) {
             if (cartProBox.getBook().getId() == idBook) {
-                cartProBox.setSL(cartProBox.getSL() + Integer.parseInt(SL));
+                cartProBox.setSL(cartProBox.getSL() + Integer.parseInt("1"));
                 cartProBoxService.update(cartProBox);
-                return viewCart(model, request);
+                return ResponseEntity.ok().body(book.getId());
             }
         }
         HttpSession session = request.getSession();
         User userSession = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         CartProBox cartProBox = new CartProBox(0, cartService.getByIdUser(userSession), bookService.getByID(idBook),
-                Integer.parseInt(SL));
+                Integer.parseInt("1"));
         cartProBoxs.add(cartProBox);
         cartProBoxService.addNew(cartProBox);
-        return viewCart(model, request);
+        return ResponseEntity.ok().body(book.getId());
     }
 }
