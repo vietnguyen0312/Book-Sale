@@ -201,10 +201,11 @@ public class BookController {
         return getBookList(model, "1");
     }
 
-    @GetMapping(value = "/search")
-    public String searchBook(Model model, @RequestParam("keyword") String keyword) {
+    @GetMapping(value = "/search", produces = "text/plain;charset=UTF-8")
+    public String searchBook(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
         bookList.clear();
         title = "Kết quả tìm kiếm (" + keyword + ")";
+        System.out.println(keyword);
         bookList = bookService.search(keyword);
         return getBookList(model, "1");
     }

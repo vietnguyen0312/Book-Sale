@@ -1,3 +1,22 @@
+function showSearchBar() {
+    var searchBar = document.getElementById("search-bar");
+    var displayButton = document.getElementById("dropbtn");
+    var all = document.getElementById("1");
+    if (searchBar.style.display === "none") {
+        searchBar.style.display = "block";
+    }
+}
+function cancelBar() {
+    var searchBar = document.getElementById("search-bar");
+    var inputKeyword = document.getElementById("keyword");
+    var suggestionBox = document.getElementById("suggestionBox");
+    if (searchBar.style.display === "block") {
+        searchBar.style.display = "none";
+        inputKeyword.value = "";
+        suggestionBox.innerHTML = "";
+    }
+}
+
 function handleSearch(event) {
     if (event.key === 'Enter') {
         var keyword = document.getElementById("keyword").value.trim();
@@ -13,27 +32,31 @@ function handleSearch(event) {
     }
 }
 
-function handleInput() {
-    var keyword = document.getElementById("keyword").value;
-    var encodedKeyword = encodeURIComponent(keyword);
-    if (encodedKeyword.length >= 1){
-        var url = "/book/recomendation?keyword=" + encodedKeyword;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var suggestions = JSON.parse(xhr.responseText);
-                displaySuggestions(suggestions);
-            }
-        };
-        xhr.send();
-    }
+let timeout = null;
 
-    // Kiểm tra xem keyword có rỗng không
-    if (keyword.trim() === "") {
-        var suggestionsDiv = document.getElementById("suggestionBox");
-        suggestionsDiv.style.display = "none"; // Ẩn các gợi ý khi không có ký tự nào trong ô input
-    }
+function handleInput() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        var keyword = document.getElementById("keyword").value.trim();
+        var encodedKeyword = encodeURIComponent(keyword);
+        if (encodedKeyword.length >= 1) {
+            var url = "/book/recomendation?keyword=" + encodedKeyword;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var suggestions = JSON.parse(xhr.responseText);
+                    displaySuggestions(suggestions);
+                }
+            };
+            xhr.send();
+        }
+        // Kiểm tra xem keyword có rỗng không sau khi nhận kết quả từ server
+        if (keyword === "") {
+            var suggestionsDiv = document.getElementById("suggestionBox");
+            suggestionsDiv.style.display = "none"; // Ẩn các gợi ý khi không có ký tự nào trong ô input
+        }
+    }, 500)
 }
 
 
@@ -43,14 +66,12 @@ function displaySuggestions(suggestions) {
     var maxSuggestions = Math.min(6, suggestions.length); // Số lượng tối đa 6 phần tử để hiển thị
     for (var i = 0; i < maxSuggestions; i++) {
         var suggestion = document.createElement("div");
-        suggestion.style.paddingTop = "20px";
-        suggestion.style.paddingBottom = "20px";
+        suggestion.style.paddingTop = "10px";
+        suggestion.style.paddingBottom = "10px";
+
         // Tạo phần tử <img> cho ảnh sách
         var bookImage = document.createElement("img");
-        bookImage.src = "'../static/images/" + suggestions[i].img + "'";
-        bookImage.style.width = "80px"; // Thiết lập chiều rộng của ảnh
-        bookImage.style.height = "40px";
-        bookImage.style.display = "inline-flex";
+        bookImage.src = "images/" + suggestions[i].img;
         suggestion.appendChild(bookImage); // Thêm ảnh vào phần tử suggestion
 
         // Tạo phần tử <a> cho tên sách
@@ -59,9 +80,16 @@ function displaySuggestions(suggestions) {
         bookLink.href = "/getBookById/" + suggestions[i].id; // Đặt href cho thẻ <a>
         suggestion.appendChild(bookLink); // Thêm tên sách vào phần tử suggestion
 
+        // Bắt sự kiện click cho suggestion div
+        suggestion.addEventListener("click", function () {
+            // Redirect đến href của thẻ <a> khi div được nhấp vào
+            window.location.href = this.querySelector('a').href;
+        });
+
         suggestionsDiv.appendChild(suggestion);
     }
     suggestionsDiv.style.display = maxSuggestions > 0 ? "block" : "none"; // Hiển thị suggestionsDiv nếu có gợi ý, ẩn nếu không có
 }
+
 
 

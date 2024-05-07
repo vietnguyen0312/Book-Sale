@@ -72,10 +72,7 @@ iframe {
     position: absolute;
     z-index: 9999;
     background-color: white;
-    font-size: larger;
     display: inline-flex;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
     width: 20%
 }
 
@@ -94,13 +91,53 @@ iframe {
 
 #suggestionBox div {
     transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền trong 0.3s */
+    display: flex; /* Sử dụng flexbox để sắp xếp ảnh và tên sách trong cùng một hàng */
+    align-items: center; /* Canh giữa phần tử con theo trục dọc */
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-#suggestionBox a{
-    display: inline;
-    overflow: hidden; /* Ẩn phần vượt quá kích thước */
-    text-overflow: ellipsis; /* Thêm dấu "..." khi văn bản bị cắt ngắn */
-    max-width: 100px;
+#suggestionBox img {
+    width: 80px;
+    height: 50px;
 }
+
+#suggestionBox a {
+    padding-left: 5%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: larger;
+    color: #808080;
+    overflow: hidden;
+    white-space: nowrap; /* Đảm bảo nội dung chỉ hiển thị trên một dòng */
+    text-overflow: ellipsis; /* Hiển thị dấu '...' khi nội dung bị cắt ngắn */
+}
+
+#keyword {
+    width: 200px; /* Độ rộng */
+    height: 40px; /* Chiều cao */
+    padding: 8px 10px; /* Khoảng cách bên trong */
+    font-size: 16px; /* Kích thước chữ */
+    border-radius: 20px; /* Đường cong viền */
+    border: 2px solid #ccc; /* Viền */
+    outline: none; /* Loại bỏ viền khi focus */
+}
+
+#cancel-button {
+    margin-left: 10px; /* Khoảng cách với thẻ input */
+    height: 100%; /* Chiều cao bằng 100% của phần tử cha */
+    padding: 0 15px; /* Khoảng cách bên trong */
+    font-size: 16px; /* Kích thước chữ */
+    border: 2px solid #ccc; /* Viền */
+    border-radius: 20px; /* Đường cong viền */
+    background-color: #fff; /* Màu nền */
+    color: #000; /* Màu chữ */
+    cursor: pointer; /* Con trỏ chuột */
+    transition: background-color 0.3s; /* Hiệu ứng hover */
+}
+
+#cancel-button:hover {
+    background-color: #ccc; /* Màu nền khi hover */
+}
+
 
 
