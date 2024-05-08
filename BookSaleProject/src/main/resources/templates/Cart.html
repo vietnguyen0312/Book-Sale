@@ -21,6 +21,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/AddToCart.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/reUse.css}">
     <link rel="stylesheet" href="/src/main/resources/static/css/Cart.css">
+    <script th:src="@{/js/Cart.js}"></script>
 </head>
 
 <body>
@@ -73,7 +74,7 @@
                             </thead>
                             <div th:unless="${check}==0">
                                 <tbody>
-                                    <tr th:each="cartProBox, status : ${cartBookList}">
+                                    <tr th:each="cartProBox : ${cartBookList}">
                                         <th class="align-middle">
                                             <input class="form-check-input" type="checkbox" name="checkBoxNoLabel"
                                                 onclick="checkBoxFunction()" th:id="${cartProBox.key.id}" />
@@ -88,7 +89,7 @@
                                                     <p class="mb-0" name="author"
                                                         th:text="${cartProBox.key.book.author}">
                                                     </p>
-                                                    <p class="text-muted mb-0 small" name="SL" 
+                                                    <p class="text-muted mb-0 small" th:name="'SL'+${cartProBox.key.id}"
                                                         th:text="'Còn: '+ ${cartProBox.key.book.SL}">
                                                     </p>
                                                 </div>
@@ -98,38 +99,42 @@
                                             <p class="mb-0" style="font-weight: 500;"
                                                 th:text="${cartProBox.key.book.bookType.name}"></p>
                                         </td>
-                                        <form th:action="@{/cart/update/__${cartProBox.key.id}__}" th:method="post" id="cart-form">
-                                            <td class="align-middle">
-                                                <div class="d-flex flex-row">
-                                                    <button data-mdb-button-init data-mdb-ripple-init
-                                                        class="btn btn-link px-2" type="submit"
-                                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
+                                        <td class="align-middle">
+                                            <div class="d-flex flex-row">
+                                                <button data-mdb-button-init data-mdb-ripple-init
+                                                    class="btn btn-link px-2"
+                                                    th:onclick="'adjustQuantity(' + ${cartProBox.key.id} + ',-1)'">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
 
-                                                    <input min="1" th:max="${cartProBox.key.book.SL}" name="quantity" th:value="${cartProBox.key.SL}"
-                                                        type="number" class="form-control form-control-sm"
-                                                        style="width: 50px;" pattern="[0-9]">
+                                                <input min="1" th:max="${cartProBox.key.book.SL}"
+                                                    th:name="'quantity'+${cartProBox.key.id}"
+                                                    th:id="'quantity'+${cartProBox.key.id}"
+                                                    th:value="${cartProBox.key.SL}" type="number"
+                                                    class="form-control form-control-sm" style="width: 70px;"
+                                                    pattern="[1-9]"
+                                                    th:onchange="'updateCart(' + ${cartProBox.key.id} + ',document.getElementById(\'quantity'+${cartProBox.key.id}+'\').value)'">
 
-                                                    <button data-mdb-button-init data-mdb-ripple-init
-                                                        class="btn btn-link px-2" type="submit"
-                                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </form>
-
+                                                <button data-mdb-button-init data-mdb-ripple-init
+                                                    class="btn btn-link px-2"
+                                                    th:onclick="'adjustQuantity(' + ${cartProBox.key.id} + ',1)'">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                <input type="hidden" th:id="'price'+${cartProBox.key.id}"
+                                                    th:value="${cartProBox.key.book.price}">
+                                            </div>
+                                        </td>
                                         <td class="align-middle price">
-                                            <p class="mb-0" style="font-weight: 500;" th:text="${cartProBox.value+'đ'}">
+                                            <p th:id="'totalPrice'+${cartProBox.key.id}" class="mb-0"
+                                                style="font-weight: 500;" th:text="${cartProBox.value+'đ'}">
                                             </p>
                                         </td>
-                                        <form th:action="@{/cart/delete/__${cartProBox.key.id}__}" th:method="post">
-                                            <td class="align-middle">
-                                                <button type="submit" class="text-danger"><i
-                                                        class="fas fa-trash fa-lg"></i></button>
-                                            </td>
-                                        </form>
+                                        <td class="align-middle">
+                                            <button class="text-danger"
+                                                th:onclick="'deleteRow(' + ${cartProBox.key.id} + ',this)'">
+                                                <i class="fas fa-trash fa-lg"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </div>
@@ -158,7 +163,6 @@
     <footer th:insert="~{footer :: footer}"></footer>
 
     <script th:src="@{/js/reUse.js}"></script>
-    <script th:src="@{/js/Cart.js}"></script>
     <script th:src="@{/js/Search.js}"></script>
 </body>
 

@@ -42,27 +42,28 @@ public class BillController {
     HistoryService historyService = new HistoryService();
 
     ArrayList<BillProBox> billProBoxs = new ArrayList<>();
-    HashMap<BillProBox, Double> biHashMap = new HashMap<>();
+    HashMap<BillProBox, Float> biHashMap = new HashMap<>();
     History history;
     Bill bill;
     User user;
-    double total = 0;
+    float total = 0;
 
     @GetMapping(value = "/viewPayment")
     public String viewPayment(Model model, @RequestParam(value = "selectedIds") String ids,
             HttpServletRequest request) {
-
+        billProBoxs.clear();
+        biHashMap.clear();
         String idCartPro[] = ids.split(",");
         System.out.println(idCartPro.toString());
         HttpSession session = request.getSession();
         user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         bill = new Bill(0, user, LocalDateTime.now().withNano(0), "Chưa thanh toán");
         billService.addNew(bill);
-        bill = billService.getAll().get(billService.getAll().size()-1);
+        bill = billService.getAll().get(billService.getAll().size() - 1);
         for (String id : idCartPro) {
             CartProBox cartProBox = cartProBoxService.getById(Integer.parseInt(id));
             BillProBox billProBox = new BillProBox(0, bill, cartProBox.getBook(), cartProBox.getSL());
-            cartProBox.getBook().setSL(cartProBox.getBook().getSL()-cartProBox.getSL());
+            cartProBox.getBook().setSL(cartProBox.getBook().getSL() - cartProBox.getSL());
             bookService.update(cartProBox.getBook());
             // history = new History(0, bill, "");
             billProBoxs.add(billProBox);

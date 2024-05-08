@@ -30,7 +30,7 @@ public class BookController {
     BookTypeService bookTypeService = new BookTypeService();
     RateService rateService = new RateService();
 
-    HashMap<Book, Double> bookRate = new HashMap<Book, Double>();
+    HashMap<Book, Float> bookRate = new HashMap<Book, Float>();
     ArrayList<Book> bookList = new ArrayList<>();
     ArrayList<BookType> bookTypeList = bookTypeService.getAll();
     String title;
@@ -51,17 +51,17 @@ public class BookController {
             bookRate.put(book, rateService.getScoreByIdBook(book));
         }
 
-        HashMap<Book, Double> bookRateList = new HashMap<Book, Double>();
+        HashMap<Book, Float> bookRateList = new HashMap<Book, Float>();
 
         for (Book book : bookListAll) {
             bookRateList.put(book, rateService.getScoreByIdBook(book));
         }
 
-        HashMap<Book, Double> topRatedBooks = new HashMap<Book, Double>();
+        HashMap<Book, Float> topRatedBooks = new HashMap<Book, Float>();
         while (topRatedBooks.size() < 3 && !bookRateList.isEmpty()) {
             Book topBook = null;
-            double maxRating = Double.MIN_VALUE;
-            for (Map.Entry<Book, Double> entry : bookRateList.entrySet()) {
+            float maxRating = Float.MIN_VALUE;
+            for (Map.Entry<Book, Float> entry : bookRateList.entrySet()) {
                 if (entry.getValue() > maxRating) {
                     maxRating = entry.getValue();
                     topBook = entry.getKey();
@@ -80,7 +80,7 @@ public class BookController {
 
     @GetMapping(value = { "/getBookList/{pageNum}" })
     public String getBookList(Model model, @PathVariable(value = "pageNum") String currentPage) {
-        int numPages = (int) Math.ceil((double) bookList.size() / 12);
+        int numPages = (int) Math.ceil((float) bookList.size() / 12);
         int[] numPage = new int[numPages];
         for (int i = 0; i < numPages; i++) {
             numPage[i] = i + 1;
@@ -163,7 +163,7 @@ public class BookController {
             bookRate.put(book, rateService.getScoreByIdBook(book));
         }
         bookList.clear();
-        for (Map.Entry<Book, Double> entry : bookRate.entrySet()) {
+        for (Map.Entry<Book, Float> entry : bookRate.entrySet()) {
             if (entry.getValue() >= 4.0) {
                 bookList.add(entry.getKey());
             }

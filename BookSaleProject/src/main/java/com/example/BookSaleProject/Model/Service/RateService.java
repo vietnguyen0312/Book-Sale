@@ -13,7 +13,7 @@ public class RateService implements IRateService {
     RateRepository rateRepository = new RateRepository();
 
     @Override
-    public double getScoreByIdBook(Book book) {
+    public float getScoreByIdBook(Book book) {
         if(rateRepository.getScoreByIdBook(book)!=0){
             return rateRepository.getScoreByIdBook(book);
         }

@@ -33,7 +33,7 @@ public class BookRepository {
                 BookType bookType = bookTypeRepository.getByID(resultSet.getInt("booktype"));
                 String date = resultSet.getString("date");
                 String nxb = resultSet.getString("nxb");
-                Double price = Double.parseDouble(resultSet.getString("price"));
+                float price = Float.parseFloat(resultSet.getString("price"));
                 int SL = resultSet.getInt("SL");
                 String img = resultSet.getString("img");
                 String detail = resultSet.getString("detail");
@@ -63,7 +63,7 @@ public class BookRepository {
             BookType bookType = bookTypeRepository.getByID(resultSet.getInt("booktype"));
             String date = resultSet.getString("date");
             String nxb = resultSet.getString("nxb");
-            Double price = Double.parseDouble(resultSet.getString("price"));
+            float price = Float.parseFloat(resultSet.getString("price"));
             int SL = resultSet.getInt("SL");
             String img = resultSet.getString("img");
             String detail = resultSet.getString("detail");

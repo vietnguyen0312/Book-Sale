@@ -70,7 +70,7 @@ public class BookService implements IBookService {
 
     private static Predicate<Book> filterByPrice(String keyword) {
         return p -> {
-            double price = p.getPrice();
+            float price = p.getPrice();
             String lowerKeyword = keyword.toLowerCase();
             String priceString = String.valueOf(price).toLowerCase();
             return priceString.contains(lowerKeyword);

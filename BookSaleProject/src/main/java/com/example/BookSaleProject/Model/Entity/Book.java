@@ -7,7 +7,7 @@ public class Book {
         return "Book [id=" + id + ", name=" + name + ", author=" + author + ", bookType=" + bookType + ", date=" + date
                 + ", nxb=" + nxb + ", price=" + price + ", SL=" + SL + ", img=" + img + ", detail=" + detail + "]"+"\n";
     }
-    public Book(int id, String name, String author, BookType bookType, String date, String nxb, double price, int sL,
+    public Book(int id, String name, String author, BookType bookType, String date, String nxb, float price, int sL,
             String img, String detail) {
         this.id = id;
         this.name = name;
@@ -28,7 +28,7 @@ public class Book {
     private BookType bookType;
     private String date;
     private String nxb;
-    private double price;
+    private float price;
     private int SL;
     private String img;
     private String detail;
@@ -68,10 +68,10 @@ public class Book {
     public void setNxb(String nxb) {
         this.nxb = nxb;
     }
-    public double getPrice() {
+    public float getPrice() {
         return price;
     }
-    public void setPrice(double price) {
+    public void setPrice(float price) {
         this.price = price;
     }
     public int getSL() {

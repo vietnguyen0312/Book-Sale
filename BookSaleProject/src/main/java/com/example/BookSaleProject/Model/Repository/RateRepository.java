@@ -18,7 +18,7 @@ public class RateRepository {
     @Autowired
     BookRepository bookRepository = new BookRepository();
     UserRepository userRepository = new UserRepository();
-    public double getScoreByIdBook(Book book){
+    public float getScoreByIdBook(Book book){
         try {
             rateList.clear();
             Class.forName(BaseConnection.nameClass);
@@ -39,7 +39,7 @@ public class RateRepository {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        double score=0;
+        float score=0;
         for (Rate rate : rateList) {
             score+=rate.getScore();
         }

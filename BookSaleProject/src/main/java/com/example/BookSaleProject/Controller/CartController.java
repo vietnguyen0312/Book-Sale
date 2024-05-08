@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +34,7 @@ public class CartController {
     BookService bookService = new BookService();
     BookTypeService bookTypeService = new BookTypeService();
 
-    HashMap<CartProBox, Double> cartBookList = new HashMap<>();
+    HashMap<CartProBox, Float> cartBookList = new HashMap<>();
     ArrayList<CartProBox> cartProBoxs = new ArrayList<>();
 
     @GetMapping(value = "/viewCart")
@@ -66,28 +65,18 @@ public class CartController {
         return "Cart";
     }
 
-    @PostMapping(value = "/delete/{id}")
-    public String deleteBook(Model model, HttpServletRequest request, @PathVariable(value = "id") String id) {
-        for (CartProBox cartProBox : cartProBoxs) {
-            if (cartProBox.getId() == Integer.parseInt(id)) {
-                cartProBoxService.delete(Integer.parseInt(id));
-                break;
-            }
-        }
-        return viewCart(model, request);
+    @PostMapping(value = "/delete")
+    public ResponseEntity<String> deleteBook(@RequestParam("id") String id) {
+        cartProBoxService.delete(Integer.parseInt(id));
+        return ResponseEntity.ok().body("Xoá thành công");
     }
 
-    @PostMapping(value = "/update/{id}")
-    public String updateBook(Model model, HttpServletRequest request, @PathVariable(value = "id") String id,
-            @RequestParam(name = "quantity") String SL) {
-        for (CartProBox cartProBox : cartProBoxs) {
-            if (cartProBox.getId() == Integer.parseInt(id)) {
-                cartProBox.setSL(Integer.parseInt(SL));
-                cartProBoxService.update(cartProBox);
-                break;
-            }
-        }
-        return viewCart(model, request);
+    @PostMapping(value = "/update")
+    public ResponseEntity<String> updateBook(@RequestParam("id") String id, @RequestParam("quantity") String quantity) {
+        CartProBox cartProBox = cartProBoxService.getById(Integer.parseInt(id));
+        cartProBox.setSL(Integer.parseInt(quantity));
+        cartProBoxService.update(cartProBox);
+        return ResponseEntity.ok().body("Cập nhật thành công");
     }
 
     @PostMapping(value = "/add")

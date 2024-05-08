@@ -69,7 +69,7 @@ public class BillService implements IBillService {
         return false;
     }
 
-    public boolean payment(double total, User user) {
+    public boolean payment(float total, User user) {
         Stripe.apiKey = "sk_test_51PCLEW04f7xtY1EEz7iu04F269Zl82jzK2aYA8kK4Lpnf8v82XhWKpPHxo6gdq7xOxqZVf754m0yHGuCuSbYCfKO00ji33h87L";
         int value = (int) total;
         try {

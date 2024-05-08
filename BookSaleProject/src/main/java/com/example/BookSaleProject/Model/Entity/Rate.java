@@ -5,7 +5,7 @@ public class Rate {
     public String toString() {
         return "Rate [id=" + id + ", user=" + user + ", book=" + book + ", score=" + score + "]";
     }
-    public Rate(int id, User user, Book book, double score) {
+    public Rate(int id, User user, Book book, float score) {
         this.id = id;
         this.user = user;
         this.book = book;
@@ -16,7 +16,7 @@ public class Rate {
     private int id;
     private User user;
     private Book book;
-    private double score;
+    private float score;
     public int getId() {
         return id;
     }
@@ -35,10 +35,10 @@ public class Rate {
     public void setBook(Book book) {
         this.book = book;
     }
-    public double getScore() {
+    public float getScore() {
         return score;
     }
-    public void setScore(double score) {
+    public void setScore(float score) {
         this.score = score;
     }
 }
