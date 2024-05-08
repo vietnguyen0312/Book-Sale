@@ -2,7 +2,6 @@ package com.example.BookSaleProject.Model.Service;
 
 import java.util.ArrayList;
 
-import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.CartProBox;
 
 public interface ICartProBoxService {
@@ -11,5 +10,4 @@ public interface ICartProBoxService {
     public boolean update(CartProBox cartProBox);
     public boolean addNew(CartProBox cartProBox);
     public CartProBox getById(int id);
-     public CartProBox getByIdBook(Book book);
 }

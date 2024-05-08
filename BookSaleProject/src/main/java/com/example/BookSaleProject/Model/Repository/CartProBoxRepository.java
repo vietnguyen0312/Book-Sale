@@ -117,27 +117,4 @@ public class CartProBoxRepository {
         }
         return null;
     }
-
-    public CartProBox getByIdBook(Book book) {
-        try {
-            Class.forName(BaseConnection.nameClass);
-            Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
-                    BaseConnection.password);
-            PreparedStatement prsm = con.prepareStatement("Select * from BOOKSALE.cartprobox where idBook=?");
-            prsm.setInt(1, book.getId());
-            ResultSet resultSet = prsm.executeQuery();
-            if (!resultSet.next()) {
-                throw new IllegalArgumentException("Cannot Find");
-            }
-            int id = resultSet.getInt("id");
-            Cart cart = cartRepository.getById(resultSet.getInt("idCart"));
-            int SL = resultSet.getInt("SL");
-            CartProBox cartProBox = new CartProBox(id, cart, book, SL);
-            con.close();
-            return cartProBox;
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        return null;
-    }
 }

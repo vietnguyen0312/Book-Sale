@@ -35,24 +35,25 @@
                             <div class="row">
                                 <div class="col-lg-6 px-5 py-4">
                                     <p class="mb-5 pt-2 text-center fw-bold text-uppercase h5">Your products</p>
-                                    <div th:each="billProBox : ${billProBoxs}">
-                                        <div class="d-flex align-items-center mb-5">
-                                            <div class="flex-shrink-0">
-                                                <img th:src="@{'/images/'+${billProBox.key.book.img}}" class="img-fluid"
-                                                    style="width: 150px;">
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <a th:href="@{book/getBookById/__${billProBox.key.book.id}__}"
-                                                    class="float-end text-black"><i class="fas fa-times"></i></a>
-                                                <p class="text-primary h5" th:text="${billProBox.key.book.name}"></p>
-                                                <p style="color: #9e9e9e; "
-                                                    th:text="'Thể loại: '+${billProBox.key.book.bookType.name}"></p>
-                                                <div class="d-flex align-items-center">
-                                                    <p class="fw-bold mb-0 me-5 pe-3"
-                                                        th:text="${billProBox.value}+' đ'">
+                                    <div style="max-height: 500px; overflow-y: auto;">
+                                        <div th:each="billProBox : ${billProBoxs}">
+                                            <div class="d-flex align-items-center mb-5">
+                                                <div class="flex-shrink-0">
+                                                    <img th:src="@{'/images/'+${billProBox.key.book.img}}"
+                                                        class="img-fluid" style="width: 150px;">
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <p class="text-primary h5" th:text="${billProBox.key.book.name}">
                                                     </p>
-                                                    <p class="quantity fw-bold text-black" name="quantity"
-                                                        th:text="${billProBox.key.SL}"></p>
+                                                    <p style="color: #9e9e9e; "
+                                                        th:text="'Thể loại: '+${billProBox.key.book.bookType.name}"></p>
+                                                    <div class="d-flex align-items-center">
+                                                        <p class="fw-bold mb-0 me-5 pe-3"
+                                                            th:text="${billProBox.value}+' đ'">
+                                                        </p>
+                                                        <p class="quantity fw-bold text-black" name="quantity"
+                                                            th:text="${billProBox.key.SL}"></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

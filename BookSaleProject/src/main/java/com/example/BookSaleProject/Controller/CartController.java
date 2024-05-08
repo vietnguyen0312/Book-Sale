@@ -82,24 +82,26 @@ public class CartController {
     @PostMapping(value = "/add")
     public ResponseEntity<String> addBook(@RequestParam("id") String id, HttpServletRequest request,
             @RequestParam("SL") String SL) {
-        System.out.println(SL);
+        ArrayList<CartProBox> cartProBoxAll = cartProBoxService.getAll();
+        HttpSession session = request.getSession();
+        User userSession = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         int idBook = Integer.parseInt(id);
-        if (cartProBoxService.getByIdBook(bookService.getByID(idBook)) != null) {
-            CartProBox cartProBox = cartProBoxService.getByIdBook(bookService.getByID(idBook));
-            if (cartProBox.getSL() + Integer.parseInt(SL) <= cartProBox.getBook().getSL()) {
-                cartProBox.setSL(cartProBox.getSL() + Integer.parseInt(SL));
-                cartProBoxService.update(cartProBox);
-            } else {
-                return ResponseEntity.badRequest().body("Số lượng đặt hàng vượt quá số lượng có sẵn trong kho!");
+        for (CartProBox cartProBox : cartProBoxAll) {
+            if (cartProBox.getCart().getUser().getId() == userSession.getId()
+                    && cartProBox.getBook().getId() == idBook) {
+                if (cartProBox.getBook().getSL() >= cartProBox.getSL() + Integer.parseInt(SL)) {
+                    cartProBox.setSL(cartProBox.getSL() + Integer.parseInt(SL));
+                    cartProBoxService.update(cartProBox);
+                    return ResponseEntity.ok().body("Thêm thành công");
+                } else {
+                    return ResponseEntity.badRequest().body("Số lượng trong kho không đủ !");
+                }
             }
-        } else {
-            HttpSession session = request.getSession();
-            User userSession = userService.getUserByEmail(session.getAttribute("userEmail").toString());
-            CartProBox cartProBox = new CartProBox(0, cartService.getByIdUser(userSession), bookService.getByID(idBook),
-                    Integer.parseInt(SL));
-            cartProBoxs.add(cartProBox);
-            cartProBoxService.addNew(cartProBox);
         }
+        CartProBox cartProBox1 = new CartProBox(0, cartService.getByIdUser(userSession),
+            bookService.getByID(idBook), Integer.parseInt(SL));
+        cartProBoxs.add(cartProBox1);
+        cartProBoxService.addNew(cartProBox1);
         return ResponseEntity.ok().body("Thêm thành công");
     }
 }

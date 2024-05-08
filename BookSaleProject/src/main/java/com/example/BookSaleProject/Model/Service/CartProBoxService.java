@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.CartProBox;
 import com.example.BookSaleProject.Model.Repository.CartProBoxRepository;
 
@@ -55,16 +54,6 @@ public class CartProBoxService implements ICartProBoxService {
         getAll();
         for (CartProBox cartProBox : cartProBoxs) {
             if (cartProBox.getId() == id)
-                return cartProBox;
-        }
-        return null;
-    }
-
-    @Override
-    public CartProBox getByIdBook(Book book) {
-        getAll();
-        for (CartProBox cartProBox : cartProBoxs) {
-            if (cartProBox.getBook().getId() == book.getId())
                 return cartProBox;
         }
         return null;
