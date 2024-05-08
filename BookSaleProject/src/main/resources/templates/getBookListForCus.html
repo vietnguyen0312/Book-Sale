@@ -20,7 +20,8 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/reUse.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/spinButton.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/Directory.css}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/AddToCart.css}">
+    <script th:src="@{/js/AddToCart.js}"></script>
 </head>
 
 
@@ -173,16 +174,14 @@
                                                             <strong style="min-width: 137px;">Tác giả</strong>
                                                         </div>
                                                         <div class="col-sm-3" style="padding-top: 20px;">
-                                                            <span th:text="${book.key.author}"
-                                                                style="padding-left: 30px;"></span>
+                                                            <span th:text="${book.key.author}"></span>
                                                         </div>
 
                                                         <div class="col-sm-3" style="padding-top: 20px;">
                                                             <strong style="min-width: 137px;">Số lượng</strong>
                                                         </div>
                                                         <div class="col-sm-3" style="padding-top: 20px;">
-                                                            <span th:text="${book.key.SL}"
-                                                                style="padding-left: 30px;"></span>
+                                                            <span th:text="${book.key.SL}"></span>
                                                         </div>
 
                                                         <div class="col-sm-3" style="padding-top: 20px;">
@@ -190,8 +189,7 @@
                                                                 bản</strong>
                                                         </div>
                                                         <div class="col-sm-3" style="padding-top: 20px;">
-                                                            <span th:text="${book.key.nxb}"
-                                                                style="padding-left: 30px;"></span>
+                                                            <span th:text="${book.key.nxb}"></span>
                                                         </div>
 
                                                         <div class="col-sm-3" style="padding-top: 20px;">
@@ -199,33 +197,32 @@
                                                                 bản</strong>
                                                         </div>
                                                         <div class="col-sm-3" style="padding-top: 20px;">
-                                                            <span th:text="${book.key.date}"
-                                                                style="padding-left: 30px;"></span>
+                                                            <span th:text="${book.key.date}"></span>
                                                         </div>
                                                         <div style="padding-top: 40px;">
                                                             <strong style="min-width: 137px;">Nội dung:</strong>
                                                             <p th:text="${book.key.detail}"></p>
                                                         </div>
 
-                                                        <form th:action="@{/cart/add/__${book.key.id}__}"
-                                                            th:method="post">
-                                                            <div style="padding-top: 2%;">
-                                                                <div class="input-group w-auto align-items-center"
-                                                                    style="display: inline-flex;">
-                                                                    <input type="button" value="-"
-                                                                        class="button-minus border  icon-shape icon-sm mx-1 "
-                                                                        data-field="SL">
-                                                                    <input type="text" value="1" name="SL"
-                                                                        class="quantity-field border-0 text-center"
-                                                                        pattern="[0-9]"
-                                                                        style="width: 45px;height: 50px;background-color: #333;color: white;">
-                                                                    <input type="button" value="+"
-                                                                        class="button-plus border icon-shape icon-sm mx-1"
-                                                                        data-field="SL">
+                                                        <div style="padding-top: 2%;">
+
+                                                            <div style="display: inline-flex;">
+                                                                <div th:if="${session.userEmail==null}">
+                                                                    <a th:href="@{/user/}"
+                                                                        style="font-size: 25px;color:#01a14b;border: none;">
+                                                                        <i class="fa-solid fa-cart-shopping"
+                                                                            style="font-weight: bolder;">
+                                                                            <p
+                                                                                style="display: inline-flex;font-family:'Times New Roman', Times, serif">
+                                                                                THÊM VÀO GIỎ HÀNG
+                                                                            </p>
+                                                                        </i>
+                                                                    </a>
                                                                 </div>
-                                                                <div style="display: inline-flex;">
-                                                                    <div th:if="${session.userEmail==null}">
-                                                                        <a th:href="@{/user/}"
+                                                                <div th:unless="${session.userEmail==null}">
+                                                                    <div th:if="${book.key.SL}!=0">
+                                                                        <button
+                                                                            th:onclick="'addToCart(' + ${book.key.id} + ',1)'"
                                                                             style="font-size: 25px;color:#01a14b;border: none;">
                                                                             <i class="fa-solid fa-cart-shopping"
                                                                                 style="font-weight: bolder;">
@@ -234,37 +231,23 @@
                                                                                     THÊM VÀO GIỎ HÀNG
                                                                                 </p>
                                                                             </i>
-                                                                        </a>
+                                                                        </button>
                                                                     </div>
-                                                                    <div th:unless="${session.userEmail==null}">
-                                                                        <div th:if="${book.key.SL}!=0">
-                                                                            <button type="submit"
-                                                                                style="font-size: 25px;color:#01a14b;border: none;">
-                                                                                <i class="fa-solid fa-cart-shopping"
-                                                                                    style="font-weight: bolder;">
-                                                                                    <p
-                                                                                        style="display: inline-flex;font-family:'Times New Roman', Times, serif">
-                                                                                        THÊM VÀO GIỎ HÀNG
-                                                                                    </p>
-                                                                                </i>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div th:unless="${book.key.SL}!=0">
-                                                                            <a onclick="alert('Hết Hàng')"
-                                                                                style="font-size: 25px;color:#01a14b;border: none;cursor: pointer;">
-                                                                                <i class="fa-solid fa-cart-shopping"
-                                                                                    style="font-weight: bolder;">
-                                                                                    <p
-                                                                                        style="display: inline-flex;font-family:'Times New Roman', Times, serif">
-                                                                                        THÊM VÀO GIỎ HÀNG
-                                                                                    </p>
-                                                                                </i>
-                                                                            </a>
-                                                                        </div>
+                                                                    <div th:unless="${book.key.SL}!=0">
+                                                                        <button onclick="alert('Hết Hàng')"
+                                                                            style="font-size: 25px;color:#01a14b;border: none;cursor: pointer;">
+                                                                            <i class="fa-solid fa-cart-shopping"
+                                                                                style="font-weight: bolder;">
+                                                                                <p
+                                                                                    style="display: inline-flex;font-family:'Times New Roman', Times, serif">
+                                                                                    THÊM VÀO GIỎ HÀNG
+                                                                                </p>
+                                                                            </i>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -277,7 +260,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -310,15 +292,14 @@
                                         </div>
                                         <div th:unless="${session.userEmail==null}">
                                             <div th:if="${book.key.SL}!=0">
-                                                <button th:onclick="'addToCart(' + ${book.key.id} + ')'" id="btnAdd"
-                                                  style="padding-right: 0px;float: right;" onmouseover="this.style.color='#01a14b';"
-                                                  onmouseout="this.style.color='black';">
-                                                  <i class="fa-solid fa-cart-shopping" style="font-size:x-large;"></i></button>
-                                                <div id="popchat">
-                                                  <i class="fa-solid fa-square-check" style="background-color: #01a14b;">Đã thêm thành công</i>
-                                                </div>
-                        
-                                              </div>
+                                                <button th:onclick="'addToCart(' + ${book.key.id} + ',1)'"
+                                                    style="padding-right: 0px;float: right;"
+                                                    onmouseover="this.style.color='#01a14b';"
+                                                    onmouseout="this.style.color='black';">
+                                                    <i class="fa-solid fa-cart-shopping"
+                                                        style="font-size:x-large;"></i></button>
+
+                                            </div>
                                             <div th:unless="${book.key.SL}!=0">
                                                 <button onclick="alert('Hết Hàng')"
                                                     style="padding-right: 0px;float: right;"

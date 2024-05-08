@@ -32,12 +32,12 @@ public class BookController {
 
     HashMap<Book, Double> bookRate = new HashMap<Book, Double>();
     ArrayList<Book> bookList = new ArrayList<>();
-    ArrayList<Book> bookListAll = bookService.getAll();
     ArrayList<BookType> bookTypeList = bookTypeService.getAll();
     String title;
 
     @GetMapping(value = "/")
     public String index(Model model) {
+        ArrayList<Book> bookListAll = bookService.getAll();
         bookRate.clear();
         bookListAll.sort(Comparator.comparing(Book::getDate).reversed());
         ArrayList<Book> newBookList = new ArrayList<>();
@@ -98,6 +98,7 @@ public class BookController {
         }
 
         ArrayList<String> nxbList = new ArrayList<>();
+        ArrayList<Book> bookListAll = bookService.getAll();
         for (Book book : bookListAll) {
             if (!nxbList.contains(book.getNxb())) {
                 nxbList.add(book.getNxb());
@@ -117,6 +118,7 @@ public class BookController {
 
     @GetMapping(value = { "/getBookById/{id}" })
     public String getBookById(Model model, @PathVariable(value = "id") String id) {
+        ArrayList<Book> bookListAll = bookService.getAll();
         Book book = bookService.getByID(Integer.parseInt(id));
         BookType bookType = book.getBookType();
         ArrayList<Book> bookListSame = new ArrayList<>();
@@ -142,6 +144,7 @@ public class BookController {
 
     @GetMapping(value = "/getNewestBook")
     public String getNewestBook(Model model) {
+        ArrayList<Book> bookListAll = bookService.getAll();
         bookList.clear();
         title = "SÁCH MỚI PHÁT HÀNH";
         for (Book book : bookListAll) {
@@ -153,6 +156,7 @@ public class BookController {
 
     @GetMapping(value = "/getFavouriteBook")
     public String getFavouriteBook(Model model) {
+        ArrayList<Book> bookListAll = bookService.getAll();
         bookRate.clear();
         title = "SÁCH ĐƯỢC YÊU THÍCH";
         for (Book book : bookListAll) {
@@ -169,6 +173,7 @@ public class BookController {
 
     @GetMapping(value = "/getBookByType/{id}")
     public String getBookByType(Model model, @PathVariable(value = "id") String id) {
+        ArrayList<Book> bookListAll = bookService.getAll();
         bookList.clear();
         title = bookTypeService.getByID(Integer.parseInt(id)).getName();
         for (Book book : bookListAll) {
@@ -181,6 +186,7 @@ public class BookController {
 
     @GetMapping(value = "/getBookByNxb/{nxb}")
     public String getBookNxb(Model model, @PathVariable(value = "nxb") String nxb) {
+        ArrayList<Book> bookListAll = bookService.getAll();
         bookList.clear();
         title = nxb;
         for (Book book : bookListAll) {
@@ -193,6 +199,7 @@ public class BookController {
 
     @GetMapping(value = "/getAllBook")
     public String getAllBook(Model model) {
+        ArrayList<Book> bookListAll = bookService.getAll();
         title = "Tất cả sản phẩm";
         bookList.clear();
         for (Book book : bookListAll) {

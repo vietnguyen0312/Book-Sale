@@ -10,11 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.CartProBox;
 import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BookService;
@@ -93,24 +91,26 @@ public class CartController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<Integer> addBook(@RequestBody Book book, HttpServletRequest request
-            ) {
-        
-        int idBook = book.getId();
-        System.out.println(book.getId());
-        for (CartProBox cartProBox : cartProBoxs) {
-            if (cartProBox.getBook().getId() == idBook) {
-                cartProBox.setSL(cartProBox.getSL() + Integer.parseInt("1"));
+    public ResponseEntity<String> addBook(@RequestParam("id") String id, HttpServletRequest request,
+            @RequestParam("SL") String SL) {
+        System.out.println(SL);
+        int idBook = Integer.parseInt(id);
+        if (cartProBoxService.getByIdBook(bookService.getByID(idBook)) != null) {
+            CartProBox cartProBox = cartProBoxService.getByIdBook(bookService.getByID(idBook));
+            if (cartProBox.getSL() + Integer.parseInt(SL) <= cartProBox.getBook().getSL()) {
+                cartProBox.setSL(cartProBox.getSL() + Integer.parseInt(SL));
                 cartProBoxService.update(cartProBox);
-                return ResponseEntity.ok().body(book.getId());
+            } else {
+                return ResponseEntity.badRequest().body("Số lượng đặt hàng vượt quá số lượng có sẵn trong kho!");
             }
+        } else {
+            HttpSession session = request.getSession();
+            User userSession = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+            CartProBox cartProBox = new CartProBox(0, cartService.getByIdUser(userSession), bookService.getByID(idBook),
+                    Integer.parseInt(SL));
+            cartProBoxs.add(cartProBox);
+            cartProBoxService.addNew(cartProBox);
         }
-        HttpSession session = request.getSession();
-        User userSession = userService.getUserByEmail(session.getAttribute("userEmail").toString());
-        CartProBox cartProBox = new CartProBox(0, cartService.getByIdUser(userSession), bookService.getByID(idBook),
-                Integer.parseInt("1"));
-        cartProBoxs.add(cartProBox);
-        cartProBoxService.addNew(cartProBox);
-        return ResponseEntity.ok().body(book.getId());
+        return ResponseEntity.ok().body("Thêm thành công");
     }
 }
