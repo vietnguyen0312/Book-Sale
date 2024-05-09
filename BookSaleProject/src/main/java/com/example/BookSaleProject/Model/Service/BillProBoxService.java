@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.BookSaleProject.Model.Entity.Bill;
 import com.example.BookSaleProject.Model.Entity.BillProBox;
 import com.example.BookSaleProject.Model.Repository.BillProBoxRepository;
 
@@ -41,5 +42,13 @@ public class BillProBoxService implements IBillProBoxService{
         }
         return null;
     }
-    
+
+    @Override
+    public ArrayList<BillProBox> getByIdBill(Bill bill) {
+        this.billProBoxs = billProBoxRepository.getByIdBill(bill);
+        if (!(billProBoxs.isEmpty())) {
+            return billProBoxs;
+        }
+        return null;
+    }
 }

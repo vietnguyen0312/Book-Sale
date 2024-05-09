@@ -9,6 +9,6 @@ public interface IBillService {
     public ArrayList<Bill> getAll();
     public boolean addNew(Bill bill);
     public Bill getById(int id);
-    public Bill getByIdUser(User user);
+    public ArrayList<Bill> getByIdUser(User user);
     public boolean update(Bill bill);
 }

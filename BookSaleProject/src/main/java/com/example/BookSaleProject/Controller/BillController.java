@@ -91,4 +91,20 @@ public class BillController {
         return "OrderDetail";
     }
 
+    @GetMapping(value = "/viewBill")
+    public String showBillView(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        ArrayList<Bill> billUser = billService.getByIdUser(user);
+        HashMap<Bill, HashMap<BillProBox, Float>> bHashMap = new HashMap<>(); // gồm bill và các sản phẩm trong bill
+        for (Bill bill : billUser) {
+            HashMap<BillProBox, Float> hashMap = new HashMap<>(); // gồm sản phẩm và tổng giá tiền của nó (Sl x đơn giá)
+            for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
+                hashMap.put(billProBox, billProBox.getSL() * billProBox.getBook().getPrice());
+            }
+            bHashMap.put(bill, hashMap);
+        }
+        model.addAttribute("bills", bHashMap);
+        return "BillView";
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.BookSaleProject.Model.Entity;
 
+import java.time.LocalDateTime;
+
 public class Rate {
     
     public Rate() {
@@ -9,12 +11,15 @@ public class Rate {
     private Book book;
     private float score;
     private String comment;
-    public Rate(int id, User user, Book book, float score, String comment) {
+    private LocalDateTime date;
+    
+    public Rate(int id, User user, Book book, float score, String comment, LocalDateTime date) {
         this.id = id;
         this.user = user;
         this.book = book;
         this.score = score;
         this.comment = comment;
+        this.date = date;
     }
     public int getId() {
         return id;
@@ -46,9 +51,16 @@ public class Rate {
     public void setComment(String comment) {
         this.comment = comment;
     }
+    public LocalDateTime getDate() {
+        return date;
+    }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
     @Override
     public String toString() {
         return "Rate [id=" + id + ", user=" + user + ", book=" + book + ", score=" + score + ", comment=" + comment
-                + "]";
+                + ", date=" + date + "]";
     }
+    
 }

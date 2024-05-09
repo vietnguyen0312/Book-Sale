@@ -84,4 +84,27 @@ public class BillProBoxRepository {
         }
         return null;
     }
+
+    public ArrayList<BillProBox> getByIdBill(Bill bill) {
+        billProBoxs.clear();
+        try {
+            Class.forName(BaseConnection.nameClass);
+            Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
+                    BaseConnection.password);
+            PreparedStatement prsm = con.prepareStatement("Select * from BOOKSALE.billprobox where idBill=?");
+            prsm.setInt(1, bill.getId());
+            ResultSet resultSet = prsm.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                Book book = bookRepository.getByID(resultSet.getInt("idBook"));
+                int SL = resultSet.getInt("SL");
+                BillProBox billProBox = new BillProBox(id, bill, book, SL);
+                billProBoxs.add(billProBox);
+            }
+            con.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return billProBoxs;
+    }
 }

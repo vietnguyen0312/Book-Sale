@@ -1,6 +1,8 @@
 package com.example.BookSaleProject.Model.Repository;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.example.BookSaleProject.Model.Entity.User;
 @Repository
 public class RateRepository {
     ArrayList<Rate> rateList = new ArrayList<>();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     @Autowired
     BookRepository bookRepository = new BookRepository();
     UserRepository userRepository = new UserRepository();
@@ -32,7 +35,8 @@ public class RateRepository {
                 User user = userRepository.getUserById(resultSet.getInt("idUser"));
                 int score = resultSet.getInt("rateScore");
                 String comment = resultSet.getString("comment");
-                Rate rate = new Rate(id, user, book, score, comment);
+                LocalDateTime localDateTime = LocalDateTime.parse(resultSet.getString("Date"), formatter);
+                Rate rate = new Rate(id, user, book, score, comment, localDateTime);
                 rateList.add(rate);
             }
             con.close();
@@ -62,7 +66,8 @@ public class RateRepository {
                 User user = userRepository.getUserById(resultSet.getInt("idUser"));
                 float score = getScoreByIdBook(book);
                 String comment = resultSet.getString(("comment"));
-                Rate rate = new Rate(id, user, book, score, comment);
+                LocalDateTime localDateTime = LocalDateTime.parse(resultSet.getString("Date"), formatter);
+                Rate rate = new Rate(id, user, book, score, comment, localDateTime);
                 rates.add(rate);
             }
             con.close();

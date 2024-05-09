@@ -52,11 +52,10 @@ public class BillService implements IBillService {
     }
 
     @Override
-    public Bill getByIdUser(User user) {
-        getAll();
-        for (Bill bill : bills) {
-            if (bill.getUser().getId() == user.getId())
-                return bill;
+    public ArrayList<Bill> getByIdUser(User user) {
+        this.bills = billRepository.getByIdUser(user);
+        if (!(bills.isEmpty())) {
+            return bills;
         }
         return null;
     }
@@ -102,4 +101,5 @@ public class BillService implements IBillService {
         }
         return true;
     }
+
 }
