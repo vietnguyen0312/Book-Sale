@@ -15,14 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.BookSaleProject.Model.Entity.Bill;
 import com.example.BookSaleProject.Model.Entity.BillProBox;
 import com.example.BookSaleProject.Model.Entity.CartProBox;
-import com.example.BookSaleProject.Model.Entity.History;
 import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BillProBoxService;
 import com.example.BookSaleProject.Model.Service.BillService;
 import com.example.BookSaleProject.Model.Service.BookService;
 import com.example.BookSaleProject.Model.Service.BookTypeService;
 import com.example.BookSaleProject.Model.Service.CartProBoxService;
-import com.example.BookSaleProject.Model.Service.HistoryService;
 import com.example.BookSaleProject.Model.Service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,11 +37,9 @@ public class BillController {
     BookService bookService = new BookService();
     CartProBoxService cartProBoxService = new CartProBoxService();
     BookTypeService bookTypeService = new BookTypeService();
-    HistoryService historyService = new HistoryService();
 
     ArrayList<BillProBox> billProBoxs = new ArrayList<>();
     HashMap<BillProBox, Float> biHashMap = new HashMap<>();
-    History history;
     Bill bill;
     User user;
     float total = 0;

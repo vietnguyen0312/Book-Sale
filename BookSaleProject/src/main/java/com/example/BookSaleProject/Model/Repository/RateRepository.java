@@ -1,7 +1,6 @@
 package com.example.BookSaleProject.Model.Repository;
 
 import java.sql.*;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,13 @@ public class RateRepository {
     @Autowired
     BookRepository bookRepository = new BookRepository();
     UserRepository userRepository = new UserRepository();
-    public float getScoreByIdBook(Book book){
+
+    public float getScoreByIdBook(Book book) {
         try {
             rateList.clear();
             Class.forName(BaseConnection.nameClass);
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
-                BaseConnection.password);
+                    BaseConnection.password);
             PreparedStatement prsm = con.prepareStatement("Select * from booksale.rate where idBook=?");
             prsm.setInt(1, book.getId());
             ResultSet resultSet = prsm.executeQuery();
@@ -31,19 +31,44 @@ public class RateRepository {
                 int id = resultSet.getInt("id");
                 User user = userRepository.getUserById(resultSet.getInt("idUser"));
                 int score = resultSet.getInt("rateScore");
-                Rate rate = new Rate(id, user, book, score);
-                rateList.add(rate); 
+                String comment = resultSet.getString("comment");
+                Rate rate = new Rate(id, user, book, score, comment);
+                rateList.add(rate);
             }
             con.close();
-        
+
         } catch (Exception e) {
             // TODO: handle exception
         }
-        float score=0;
+        float score = 0;
         for (Rate rate : rateList) {
-            score+=rate.getScore();
+            score += rate.getScore();
         }
-        score/=rateList.size();
+        score /= rateList.size();
         return score;
+    }
+
+    public ArrayList<Rate> getByIdBook(Book book) {
+        ArrayList<Rate> rates = new ArrayList<>();
+        try {
+            Class.forName(BaseConnection.nameClass);
+            Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
+                    BaseConnection.password);
+            PreparedStatement prsm = con.prepareStatement("Select * from BOOKSALE.rate where idBook=?");
+            prsm.setInt(1, book.getId());
+            ResultSet resultSet = prsm.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                User user = userRepository.getUserById(resultSet.getInt("idUser"));
+                float score = getScoreByIdBook(book);
+                String comment = resultSet.getString(("comment"));
+                Rate rate = new Rate(id, user, book, score, comment);
+                rates.add(rate);
+            }
+            con.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return rates;
     }
 }

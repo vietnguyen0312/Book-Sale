@@ -1,9 +1,12 @@
 package com.example.BookSaleProject.Model.Service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.BookSaleProject.Model.Entity.Book;
+import com.example.BookSaleProject.Model.Entity.Rate;
 import com.example.BookSaleProject.Model.Repository.RateRepository;
 
 @Service
@@ -19,5 +22,15 @@ public class RateService implements IRateService {
         }
         return 0;
     }
+
+    @Override
+    public ArrayList<Rate> getByIdBook(Book book) {
+        ArrayList<Rate> rates = rateRepository.getByIdBook(book);
+        if (!rates.isEmpty()) {
+            return rates;
+        }
+        return null;
+    }
+
 
 }

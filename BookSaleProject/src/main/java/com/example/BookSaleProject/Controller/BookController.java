@@ -11,12 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.BookType;
+import com.example.BookSaleProject.Model.Entity.Rate;
 import com.example.BookSaleProject.Model.Service.BookService;
 import com.example.BookSaleProject.Model.Service.BookTypeService;
 import com.example.BookSaleProject.Model.Service.RateService;
@@ -134,6 +134,10 @@ public class BookController {
         for (Book book2 : bookListSame) {
             bookRate.put(book2, rateService.getScoreByIdBook(book2));
         }
+        
+        ArrayList<Rate> rates = rateService.getByIdBook(book);
+
+        model.addAttribute("rates", rates);
         model.addAttribute("rate", rateService.getScoreByIdBook(book));
         model.addAttribute("bookTypeList", bookTypeList);
         model.addAttribute("BookRate", bookRate);
@@ -221,11 +225,4 @@ public class BookController {
         ArrayList<Book> searchResult = bookService.search(keyword);
         return ResponseEntity.ok().body(searchResult);
     }
-
-    @PostMapping(value = { "/updateBook" })
-    public String updateBook(Model model, @RequestParam("bookFinded") String id) {
-
-        return "";
-    }
-
 }

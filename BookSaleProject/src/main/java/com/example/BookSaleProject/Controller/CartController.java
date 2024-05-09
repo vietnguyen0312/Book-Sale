@@ -86,20 +86,22 @@ public class CartController {
         HttpSession session = request.getSession();
         User userSession = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         int idBook = Integer.parseInt(id);
-        for (CartProBox cartProBox : cartProBoxAll) {
-            if (cartProBox.getCart().getUser().getId() == userSession.getId()
-                    && cartProBox.getBook().getId() == idBook) {
-                if (cartProBox.getBook().getSL() >= cartProBox.getSL() + Integer.parseInt(SL)) {
-                    cartProBox.setSL(cartProBox.getSL() + Integer.parseInt(SL));
-                    cartProBoxService.update(cartProBox);
-                    return ResponseEntity.ok().body("Thêm thành công");
-                } else {
-                    return ResponseEntity.badRequest().body("Số lượng trong kho không đủ !");
+        if (cartProBoxAll != null) {
+            for (CartProBox cartProBox : cartProBoxAll) {
+                if (cartProBox.getCart().getUser().getId() == userSession.getId()
+                        && cartProBox.getBook().getId() == idBook) {
+                    if (cartProBox.getBook().getSL() >= cartProBox.getSL() + Integer.parseInt(SL)) {
+                        cartProBox.setSL(cartProBox.getSL() + Integer.parseInt(SL));
+                        cartProBoxService.update(cartProBox);
+                        return ResponseEntity.ok().body("Thêm thành công");
+                    } else {
+                        return ResponseEntity.badRequest().body("Số lượng trong kho không đủ !");
+                    }
                 }
             }
         }
         CartProBox cartProBox1 = new CartProBox(0, cartService.getByIdUser(userSession),
-            bookService.getByID(idBook), Integer.parseInt(SL));
+                bookService.getByID(idBook), Integer.parseInt(SL));
         cartProBoxs.add(cartProBox1);
         cartProBoxService.addNew(cartProBox1);
         return ResponseEntity.ok().body("Thêm thành công");
