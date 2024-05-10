@@ -25,10 +25,28 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //Đánh giá sản phẩm
-function ratingBook(idbook, comment, score) {
+function ratingBook(idbook) {
     const pop = document.querySelector("#popchat");
+    var score = null;
+    var stars = document.querySelectorAll('.stars input[type="radio"]');
+    var comment = document.getElementById('comment').value;
+    
+    // Lặp qua từng input sao
+    stars.forEach(function(star) {
+        // Kiểm tra xem input sao này có được chọn không
+        if (star.checked) {
+            // Lấy giá trị của input sao đã chọn
+            score = parseInt(star.id.split('-')[1]);
+        }
+    });
+
+    // Nếu không có điểm được chọn, bạn có thể xử lý theo ý của bạn, ví dụ: gán mặc định là 0.
+    if (score === null) {
+        score = 0;
+    }
+
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/book/rating?idBook=" + idbook + "&comment=" + comment + "$score=" + score, true);
+    xhr.open("POST", "/book/rating?idBook=" + idbook + "&comment=" + comment + "&score=" + score, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Phản hồi thành công

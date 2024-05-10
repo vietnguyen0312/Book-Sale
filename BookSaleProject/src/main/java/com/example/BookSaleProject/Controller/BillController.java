@@ -112,6 +112,10 @@ public class BillController {
     public String showBillView(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        model.addAttribute("bookTypeList", bookTypeService.getAll());
+        if (billService.getByIdUser(user)==null) {
+            return "BillView";
+        }
         ArrayList<Bill> billUser = billService.getByIdUser(user);
         HashMap<Bill, HashMap<BillProBox, Float>> bHashMap = new HashMap<>(); // gồm bill và các sản phẩm trong bill
         for (Bill bill : billUser) {
@@ -122,7 +126,6 @@ public class BillController {
             bHashMap.put(bill, hashMap);
         }
         model.addAttribute("bills", bHashMap);
-        model.addAttribute("bookTypeList", bookTypeService.getAll());
         return "BillView";
     }
 }

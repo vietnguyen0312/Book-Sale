@@ -105,3 +105,16 @@
   #popchat.active {
     opacity: 1;
   }
+  .card:hover {
+    transform: none;
+}
+
+.bg-image {
+    background-color: #e1e1e1;
+    border: 1px solid #e1e1e1;
+}
+
+.rounded-5 {
+    border-radius: 0.5rem;
+    /* Bo góc */
+}
