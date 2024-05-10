@@ -64,7 +64,7 @@ public class RateRepository {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 User user = userRepository.getUserById(resultSet.getInt("idUser"));
-                float score = getScoreByIdBook(book);
+                float score = resultSet.getInt("rateScore");
                 String comment = resultSet.getString(("comment"));
                 LocalDateTime localDateTime = LocalDateTime.parse(resultSet.getString("Date"), formatter);
                 Rate rate = new Rate(id, user, book, score, comment, localDateTime);
@@ -75,5 +75,26 @@ public class RateRepository {
             // TODO: handle exception
         }
         return rates;
+    }
+
+    public boolean addNew(Rate rate) {
+        try {
+            Class.forName(BaseConnection.nameClass);
+            Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
+                    BaseConnection.password);
+            PreparedStatement prsm = con
+                    .prepareStatement("Insert into BOOKSALE.rate (idUser,idBook,rateScore,comment,Date) values (?,?,?,?,?)");
+            prsm.setInt(1, rate.getUser().getId());
+            prsm.setInt(2, rate.getBook().getId());
+            prsm.setInt(3, (int)rate.getScore());
+            prsm.setString(4, rate.getComment());
+            prsm.setString(5, rate.getDate().withNano(0).toString());
+            int result = prsm.executeUpdate();
+            con.close();
+            return result > 0;
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return false;
     }
 }

@@ -120,14 +120,14 @@
                               <strong style="min-width: 137px;">Tác giả</strong>
                             </div>
                             <div class="col-sm-3" style="padding-top: 20px;">
-                              <span th:text="${book.key.author}" ></span>
+                              <span th:text="${book.key.author}"></span>
                             </div>
 
                             <div class="col-sm-3" style="padding-top: 20px;">
                               <strong style="min-width: 137px;">Số lượng</strong>
                             </div>
                             <div class="col-sm-3" style="padding-top: 20px;">
-                              <span th:text="${book.key.SL}" ></span>
+                              <span th:text="${book.key.SL}"></span>
                             </div>
 
                             <div class="col-sm-3" style="padding-top: 20px;">
@@ -317,14 +317,14 @@
                               <strong style="min-width: 137px;">Tác giả</strong>
                             </div>
                             <div class="col-sm-3" style="padding-top: 20px;">
-                              <span th:text="${book.key.author}" ></span>
+                              <span th:text="${book.key.author}"></span>
                             </div>
 
                             <div class="col-sm-3" style="padding-top: 20px;">
                               <strong style="min-width: 137px;">Số lượng</strong>
                             </div>
                             <div class="col-sm-3" style="padding-top: 20px;">
-                              <span th:text="${book.key.SL}" ></span>
+                              <span th:text="${book.key.SL}"></span>
                             </div>
 
                             <div class="col-sm-3" style="padding-top: 20px;">
@@ -332,7 +332,7 @@
                                 bản</strong>
                             </div>
                             <div class="col-sm-3" style="padding-top: 20px;">
-                              <span th:text="${book.key.nxb}" ></span>
+                              <span th:text="${book.key.nxb}"></span>
                             </div>
 
                             <div class="col-sm-3" style="padding-top: 20px;">
@@ -340,48 +340,48 @@
                                 bản</strong>
                             </div>
                             <div class="col-sm-3" style="padding-top: 20px;">
-                              <span th:text="${book.key.date}" ></span>
+                              <span th:text="${book.key.date}"></span>
                             </div>
                             <div style="padding-top: 40px;">
                               <strong style="min-width: 137px;">Nội dung:</strong>
                               <p th:text="${book.key.detail}"></p>
                             </div>
-                            
-                              <div style="padding-top: 2%;">
-                                <div style="display: inline-flex;">
-                                  <div th:if="${session.userEmail==null}">
-                                    <a th:href="@{/user/}" style="font-size: 25px;color:#01a14b;border: none;">
+
+                            <div style="padding-top: 2%;">
+                              <div style="display: inline-flex;">
+                                <div th:if="${session.userEmail==null}">
+                                  <a th:href="@{/user/}" style="font-size: 25px;color:#01a14b;border: none;">
+                                    <i class="fa-solid fa-cart-shopping" style="font-weight: bolder;">
+                                      <p style="display: inline-flex;font-family:'Times New Roman', Times, serif">
+                                        THÊM VÀO GIỎ HÀNG
+                                      </p>
+                                    </i>
+                                  </a>
+                                </div>
+                                <div th:unless="${session.userEmail==null}">
+                                  <div th:if="${book.key.SL}!=0">
+                                    <button th:onclick="'addToCart(' + ${book.key.id} + ',1)'"
+                                      style="font-size: 25px;color:#01a14b;border: none;">
                                       <i class="fa-solid fa-cart-shopping" style="font-weight: bolder;">
                                         <p style="display: inline-flex;font-family:'Times New Roman', Times, serif">
                                           THÊM VÀO GIỎ HÀNG
                                         </p>
                                       </i>
-                                    </a>
+                                    </button>
                                   </div>
-                                  <div th:unless="${session.userEmail==null}">
-                                    <div th:if="${book.key.SL}!=0">
-                                      <button th:onclick="'addToCart(' + ${book.key.id} + ',1)'"
-                                        style="font-size: 25px;color:#01a14b;border: none;">
-                                        <i class="fa-solid fa-cart-shopping" style="font-weight: bolder;">
-                                          <p style="display: inline-flex;font-family:'Times New Roman', Times, serif">
-                                            THÊM VÀO GIỎ HÀNG
-                                          </p>
-                                        </i>
-                                      </button>
-                                    </div>
-                                    <div th:if="${book.key.SL}==0" style="display: inline-flex;">
-                                      <button onclick="alert('Hết Hàng')"
-                                        style="font-size: 25px;color:#01a14b;border: none;cursor: pointer;">
-                                        <i class="fa-solid fa-cart-shopping" style="font-weight: bolder;">
-                                          <p style="display: inline-flex;font-family:'Times New Roman', Times, serif">
-                                            THÊM VÀO GIỎ HÀNG
-                                          </p>
-                                        </i>
-                                      </button>
-                                    </div>
+                                  <div th:if="${book.key.SL}==0" style="display: inline-flex;">
+                                    <button onclick="alert('Hết Hàng')"
+                                      style="font-size: 25px;color:#01a14b;border: none;cursor: pointer;">
+                                      <i class="fa-solid fa-cart-shopping" style="font-weight: bolder;">
+                                        <p style="display: inline-flex;font-family:'Times New Roman', Times, serif">
+                                          THÊM VÀO GIỎ HÀNG
+                                        </p>
+                                      </i>
+                                    </button>
                                   </div>
                                 </div>
                               </div>
+                            </div>
                           </div>
                         </div>
 
@@ -446,6 +446,10 @@
     </div>
   </div>
 
+  <div id="popchat">
+    <i class="fa-solid fa-square-check" style="background-color: #01a14b;"></i>
+    Đã thêm thành công
+  </div>
 
   <div style="padding-top: 40px;">
     <p class="h2" style="font-weight: bolder;text-align: center;">SÁCH BÁN CHẠY</p>

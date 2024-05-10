@@ -44,7 +44,7 @@ function handlePayment() {
     var selectedIdsString = selectedIds.join(",");
 
     // Gửi các ID đã chọn đến servlet bằng cách chuyển hướng URL
-    window.location.href = "/bill/viewPayment?selectedIds=" + selectedIdsString;
+    window.location.href = "/bill/payment?selectedIds=" + selectedIdsString;
 }
 
 var input;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +12,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.BookType;
 import com.example.BookSaleProject.Model.Entity.Rate;
+import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BookService;
 import com.example.BookSaleProject.Model.Service.BookTypeService;
 import com.example.BookSaleProject.Model.Service.RateService;
+import com.example.BookSaleProject.Model.Service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = { "/book", "" })
@@ -29,6 +36,7 @@ public class BookController {
     BookService bookService = new BookService();
     BookTypeService bookTypeService = new BookTypeService();
     RateService rateService = new RateService();
+    UserService userService = new UserService();
 
     HashMap<Book, Float> bookRate = new HashMap<Book, Float>();
     ArrayList<Book> bookList = new ArrayList<>();
@@ -134,7 +142,7 @@ public class BookController {
         for (Book book2 : bookListSame) {
             bookRate.put(book2, rateService.getScoreByIdBook(book2));
         }
-        
+
         ArrayList<Rate> rates = rateService.getByIdBook(book);
 
         model.addAttribute("rates", rates);
@@ -224,5 +232,15 @@ public class BookController {
     public ResponseEntity<ArrayList<Book>> recomendationBook(@RequestParam("keyword") String keyword) {
         ArrayList<Book> searchResult = bookService.search(keyword);
         return ResponseEntity.ok().body(searchResult);
+    }
+
+    @PostMapping(value = "/rating")
+    public ResponseEntity<String> ratingBook(@RequestParam("idBook") String idBook,@RequestParam("comment") String comment
+    ,@RequestParam("score") String score, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        Rate rate = new Rate(0, user, bookService.getByID(Integer.parseInt(idBook)),Float.parseFloat(score), comment, LocalDateTime.now().withNano(0));
+        rateService.addNew(rate);
+        return ResponseEntity.ok().body("Đánh giá thành công");
     }
 }

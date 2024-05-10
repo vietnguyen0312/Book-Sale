@@ -32,5 +32,13 @@ public class RateService implements IRateService {
         return null;
     }
 
+    @Override
+    public boolean addNew(Rate rate) {
+        if (rateRepository.addNew(rate)) {
+            return true;
+        }
+        return false;
+    }
+
 
 }

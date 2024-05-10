@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +45,7 @@ public class BillController {
     User user;
     float total = 0;
 
-    @GetMapping(value = "/viewPayment")
+    @GetMapping(value = "/payment")
     public String viewPayment(Model model, @RequestParam(value = "selectedIds") String ids,
             HttpServletRequest request) {
         billProBoxs.clear();
@@ -67,6 +68,22 @@ public class BillController {
             cartProBoxService.delete(Integer.parseInt(id));
             // historyService.addNew(history);
         }
+        for (BillProBox billProBox : billProBoxs) {
+            total += billProBox.getSL() * billProBox.getBook().getPrice();
+            biHashMap.put(billProBox, billProBox.getSL() * billProBox.getBook().getPrice());
+        }
+        model.addAttribute("total", total);
+        model.addAttribute("bill", bill);
+        model.addAttribute("bookTypeList", bookTypeService.getAll());
+        model.addAttribute("billProBoxs", biHashMap);
+        return "Payment";
+    }
+
+    @GetMapping(value = "/paymentOldBill/{id}")
+    public String viewPayment(Model model, HttpServletRequest request, @PathVariable("id") String idBill) {
+        bill = billService.getById(Integer.parseInt(idBill));
+        billProBoxs = billProBoxService.getByIdBill(bill);
+        total = 0;
         for (BillProBox billProBox : billProBoxs) {
             total += billProBox.getSL() * billProBox.getBook().getPrice();
             biHashMap.put(billProBox, billProBox.getSL() * billProBox.getBook().getPrice());
@@ -105,6 +122,7 @@ public class BillController {
             bHashMap.put(bill, hashMap);
         }
         model.addAttribute("bills", bHashMap);
+        model.addAttribute("bookTypeList", bookTypeService.getAll());
         return "BillView";
     }
 }

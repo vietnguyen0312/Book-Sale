@@ -2,8 +2,6 @@ function addToCart(id, SL) {
     const pop = document.querySelector("#popchat");
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/cart/add?id=" + id + "&SL=" + SL, true);
-    console.log(id);
-    console.log(SL);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {

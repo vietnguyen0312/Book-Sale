@@ -18,10 +18,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/reUse.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/BillView.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/AddToCart.css}">
     <style>
         .card:hover {
             transform: none;
@@ -78,16 +76,16 @@
 
     <div th:if="${bills != null}">
         <div th:each="bill : ${bills}">
-            <div class="row" style="padding-top: 20px;">
+            <div class="row" style="padding-top: 20px;" th:id="'bills'+${bill.key.id}">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8">
                     <div class="card">
                         <div class="card-body">
-                            <div class="container mb-5 mt-3">
+                            <div class="container mb-3 mt-3">
                                 <div class="row d-flex align-items-baseline">
                                     <div class="col-xl-9">
                                         <p style="color: #7e8d9f;font-size: 20px;">Invoice &gt;&gt; <strong
-                                                th:text="'ID: #' + ${bill.key.id}"></strong></p>
+                                                th:text="'ID: #' + ${bill.key.id}" th:id="${bill.key.id}"></strong></p>
                                     </div>
                                 </div>
                                 <div class="container">
@@ -124,7 +122,8 @@
                                         </div>
                                     </div>
                                     <div th:each="billProBox : ${bill.value}">
-                                        <div class="row my-2 mx-1 justify-content-center">
+                                        <div class="row my-2 mx-1 justify-content-center"
+                                            th:id="'billProBox'+${billProBox.key.id}">
                                             <div class="col-md-2 mb-4 mb-md-0">
                                                 <div class="bg-image rounded-5 mb-4 overflow-hidden d-block position-relative"
                                                     style="width: 90px; height: 90px;">
@@ -135,7 +134,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-4 mb-md-0">
-                                                <p class="fw-bold" th:text="${billProBox.key.book.name}"></p>
+                                                <a th:href="@{/getBookById/__${billProBox.key.book.id}__}"
+                                                    style="cursor: pointer;">
+                                                    <p class="fw-bold" th:text="${billProBox.key.book.name}">
+
+                                                    </p>
+                                                </a>
                                                 <p class="mb-1">
                                                     <span class="text-muted me-2">Thể loại:</span>
                                                     <span th:text="${billProBox.key.book.bookType.name}"></span>
@@ -148,14 +152,26 @@
                                             <div class="col-md-2 mb-4 mb-md-0">
                                                 <br>
                                                 <h5 class="mb-2"><span class="align-middle"
+                                                        th:id="${bill.key.id} +'price' + ${billProBox.key.id}"
                                                         th:text="${billProBox.value}+' đ'"></span></h5>
                                             </div>
                                             <div class="col-md-1 d-flex align-items-center justify-content-center">
                                                 <button
                                                     class="btn btn-primary btn-sm rounded-pill px-4 py-2 position-relative"
-                                                    style="background-color: coral;">
+                                                    style="background-color: coral;" data-bs-toggle="modal"
+                                                    th:data-bs-target="|#ratingModal${bill.key.id}|">
                                                     <i class="fas fa-star me-1"></i>Đánh giá
                                                 </button>
+                                                <div class="modal fade" th:id="|ratingModal${bill.key.id}|">
+                                                    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable"
+                                                        role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                Modal body..
+                                                              </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -164,10 +180,28 @@
                                     <div class="row">
                                         <div class="col-sm-8"></div>
                                         <div class="col-sm-3">
-                                            <p class="text-black float-start"><span class="text-black me-3"> Total
-                                                    Amount</span><span style="font-size: 25px;"></span></p>
+                                            <div class="d-flex flex-column align-items-center">
+                                                <span class="text-black me-3" th:id="'total' + ${bill.key.id}"
+                                                    style="display: block;">Total Amount</span>
+                                                <span style="font-size: 25px;"></span>
+                                                <div class="mt-3" th:if="${bill.key.status} == 'Chưa thanh toán'">
+                                                    <form th:action="@{/paymentOldBill/__${bill.key.id}__}">
+                                                        <button type="button" class="btn btn-success btn-coral">Thanh
+                                                            toán ngay</button>
+                                                    </form>
+                                                    <button type="button" class="btn btn-danger btn-coral">Huỷ
+                                                        đơn</button>
+                                                </div>
+                                                <div class="mt-3" th:if="${bill.key.status} == 'Đã thanh toán'">
+                                                    <button type="button" class="btn btn-primary btn-coral">Mua
+                                                        lại</button>
+                                                    <button type="button" class="btn btn-danger btn-coral">Huỷ
+                                                        đơn</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -177,9 +211,15 @@
         </div>
     </div>
 
+    <div id="popchat">
+        <i class="fa-solid fa-square-check" style="background-color: #01a14b;"></i>
+        Đánh giá thành công
+      </div>
+
     <footer th:insert="~{footer :: footer}"></footer>
     <script th:src="@{/js/reUse.js}"></script>
     <script th:src="@{/js/Search.js}"></script>
+    <script th:src="@{/js/BillView.js}"></script>
 
 </body>
 
