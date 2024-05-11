@@ -169,6 +169,7 @@ public class BookController {
     @GetMapping(value = "/getFavouriteBook")
     public String getFavouriteBook(Model model) {
         ArrayList<Book> bookListAll = bookService.getAll();
+        bookList.clear();
         bookRate.clear();
         title = "SÁCH ĐƯỢC YÊU THÍCH";
         for (Book book : bookListAll) {
@@ -180,6 +181,13 @@ public class BookController {
                 bookList.add(entry.getKey());
             }
         }
+        return getBookList(model, "1");
+    }
+    
+    @GetMapping(value = "/getBestSellingBook")
+    public String getBestSellingBook(Model model) {
+        bookList.clear();
+        title = "SÁCH BÁN CHẠY";
         return getBookList(model, "1");
     }
 

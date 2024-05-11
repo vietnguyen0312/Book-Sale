@@ -98,7 +98,8 @@
                                                     </span>
                                                     <p th:text="${bill.key.date}" style="display: inline-flex;"></p>
                                                 </li>
-                                                <li class="text-muted">
+                                                <li class="text-muted" th:id="|status${bill.key.id}|"
+                                                    th:if="${bill.key.status}!='Đã hủy'">
                                                     <i class="fas fa-circle" style="color:#8f8061;"></i>
                                                     <span class="me-1 fw-bold">Status:</span>
                                                     <span class="badge bg-warning text-black fw-bold"
@@ -141,9 +142,10 @@
                                                         th:id="${bill.key.id} +'price' + ${billProBox.key.id}"
                                                         th:text="${billProBox.value}+' đ'"></span></h5>
                                             </div>
-                                            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                            <div class="col-md-1 d-flex align-items-center justify-content-center"
+                                                th:if="${bill.key.status} == 'Đã thanh toán'">
                                                 <button
-                                                    class="btn btn-primary btn-sm rounded-pill px-4 py-2 position-relative"
+                                                    class="btn btn-primary btn-sm rounded-pill px-2 py-1 position-relative"
                                                     style="background-color: coral;" data-bs-toggle="modal"
                                                     th:data-bs-target="|#ratingModal${billProBox.key.id}|">
                                                     <i class="fas fa-star me-1"></i>Đánh giá
@@ -194,7 +196,7 @@
                                                                     </div>
                                                                     <div class="col">
                                                                         <button class="btn btn-success"
-                                                                         th:onclick="'ratingBook(' + ${billProBox.key.book.id} + ')'">
+                                                                            th:onclick="'ratingBook(' + ${billProBox.key.book.id} + ')'">
                                                                             Gửi đánh giá
                                                                         </button>
                                                                     </div>
@@ -204,7 +206,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                     <hr>
@@ -215,18 +216,24 @@
                                                 <span class="text-black me-3" th:id="'total' + ${bill.key.id}"
                                                     style="display: block;">Total Amount</span>
                                                 <span style="font-size: 25px;"></span>
-                                                <div class="mt-3" th:if="${bill.key.status} == 'Chưa thanh toán'">
-                                                    <form th:action="@{/paymentOldBill/__${bill.key.id}__}">
-                                                        <button type="button" class="btn btn-success btn-coral">Thanh
-                                                            toán</button>
-                                                    </form>
-                                                    <button type="button" class="btn btn-danger btn-coral">Huỷ
+                                                <div class="mt-3" th:if="${bill.key.status} == 'Chưa thanh toán'"
+                                                    th:id="|Cancel${bill.key.id}|">
+                                                    <a th:href="@{/bill/paymentOldBill/__${bill.key.id}__}"
+                                                        class="btn btn-success btn-coral" style="cursor: pointer;">Thanh
+                                                        toán ngay</a>
+                                                    <button class="btn btn-danger btn-coral"
+                                                        th:onclick="'billCancel(' + ${bill.key.id} + ')'">Huỷ
                                                         đơn</button>
                                                 </div>
                                                 <div class="mt-3" th:if="${bill.key.status} == 'Đã thanh toán'"
                                                     style="width: fit-content;">
                                                     <button type="button" class="btn btn-primary btn-coral">Mua
                                                         lại</button>
+                                                </div>
+                                                <div class="mt-3" th:if="${bill.key.status} == 'Đã hủy'"
+                                                    style="width: fit-content;" th:id="|Canceled${bill.key.id}|">
+                                                    <button class="btn btn-primary" style="background-color: #7e8d9f;"
+                                                        disabled>Đã hủy</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -250,7 +257,6 @@
     <script th:src="@{/js/reUse.js}"></script>
     <script th:src="@{/js/Search.js}"></script>
     <script th:src="@{/js/BillView.js}"></script>
-
 </body>
 
 </html>

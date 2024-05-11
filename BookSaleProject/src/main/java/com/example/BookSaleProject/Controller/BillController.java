@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.BookSaleProject.Model.Entity.Bill;
 import com.example.BookSaleProject.Model.Entity.BillProBox;
+import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.CartProBox;
 import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BillProBoxService;
@@ -50,8 +52,8 @@ public class BillController {
             HttpServletRequest request) {
         billProBoxs.clear();
         biHashMap.clear();
+        total = 0;
         String idCartPro[] = ids.split(",");
-        System.out.println(idCartPro.toString());
         HttpSession session = request.getSession();
         user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         bill = new Bill(0, user, LocalDateTime.now().withNano(0), "Chưa thanh toán");
@@ -81,6 +83,8 @@ public class BillController {
 
     @GetMapping(value = "/paymentOldBill/{id}")
     public String viewPayment(Model model, HttpServletRequest request, @PathVariable("id") String idBill) {
+        billProBoxs.clear();
+        biHashMap.clear();
         bill = billService.getById(Integer.parseInt(idBill));
         billProBoxs = billProBoxService.getByIdBill(bill);
         total = 0;
@@ -99,6 +103,7 @@ public class BillController {
     public String showOrder(Model model) {
         bill.setStatus("Đã thanh toán");
         billService.update(bill);
+        System.out.println(bill.toString());
         model.addAttribute("total", total);
         model.addAttribute("user", bill.getUser());
         model.addAttribute("bill", bill);
@@ -108,12 +113,26 @@ public class BillController {
         return "OrderDetail";
     }
 
+    @PostMapping(value = "/cancelBill")
+    public ResponseEntity<String> cancelBill(@RequestParam("idBill")String idBill) {
+        bill = billService.getById(Integer.parseInt(idBill));
+        ArrayList<BillProBox> billProBoxs = billProBoxService.getByIdBill(bill);
+        for (BillProBox billProBox  : billProBoxs) {
+            Book book = bookService.getByID(billProBox.getBook().getId());
+            book.setSL(book.getSL()+billProBox.getSL());
+            bookService.update(book);
+        }
+        bill.setStatus("Đã hủy");
+        billService.update(bill);
+        return ResponseEntity.ok().body("Đã hủy đơn");
+    }
+
     @GetMapping(value = "/viewBill")
     public String showBillView(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         model.addAttribute("bookTypeList", bookTypeService.getAll());
-        if (billService.getByIdUser(user)==null) {
+        if (billService.getByIdUser(user) == null) {
             return "BillView";
         }
         ArrayList<Bill> billUser = billService.getByIdUser(user);

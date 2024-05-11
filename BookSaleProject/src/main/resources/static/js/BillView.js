@@ -24,15 +24,48 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function billCancel(idBill) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/bill/cancelBill?idBill=" + idBill, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                console.log(xhr.responseText);
+                var statusDiv = document.querySelector('[id = "status' + idBill + '"]');
+                if (statusDiv) {
+                    statusDiv.style.display = "none";
+                }
+                var cancelDiv = document.getElementById('Cancel' + idBill);
+                if (cancelDiv) {
+                    cancelDiv.innerHTML = ''; // Xóa nội dung hiện tại của div Cancel
+                    // Tạo một button mới
+                    var cancelButton = document.createElement('button');
+                    cancelButton.className = 'btn btn-primary';
+                    cancelButton.style.backgroundColor = '#7e8d9f';
+                    cancelButton.disabled = true;
+                    cancelButton.innerText = 'Đã hủy';
+                    // Thêm button vào trong div Cancel
+                    cancelDiv.appendChild(cancelButton);
+                }
+            } else {
+                // Xử lý lỗi nếu có
+                console.error("Có lỗi xảy ra: " + xhr.statusText);
+            }
+        }
+    };
+    xhr.send();
+}
+
+
 //Đánh giá sản phẩm
 function ratingBook(idbook) {
     const pop = document.querySelector("#popchat");
     var score = null;
     var stars = document.querySelectorAll('.stars input[type="radio"]');
     var comment = document.getElementById('comment').value;
-    
+
     // Lặp qua từng input sao
-    stars.forEach(function(star) {
+    stars.forEach(function (star) {
         // Kiểm tra xem input sao này có được chọn không
         if (star.checked) {
             // Lấy giá trị của input sao đã chọn
@@ -59,3 +92,5 @@ function ratingBook(idbook) {
     };
     xhr.send();
 }
+
+
