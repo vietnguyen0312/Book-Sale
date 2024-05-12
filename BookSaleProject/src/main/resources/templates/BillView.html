@@ -156,36 +156,33 @@
                                                         <div class="modal-content">
                                                             <div class="modal-body">
                                                                 <p th:text="${billProBox.key.book.id}"></p>
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="stars">
-                                                                            <input class="star star-5" id="star-5"
-                                                                                type="radio" name="star" />
-                                                                            <label class="star star-5"
-                                                                                for="star-5"></label>
-                                                                            <input class="star star-4" id="star-4"
-                                                                                type="radio" name="star" />
-                                                                            <label class="star star-4"
-                                                                                for="star-4"></label>
-                                                                            <input class="star star-3" id="star-3"
-                                                                                type="radio" name="star" />
-                                                                            <label class="star star-3"
-                                                                                for="star-3"></label>
-                                                                            <input class="star star-2" id="star-2"
-                                                                                type="radio" name="star" />
-                                                                            <label class="star star-2"
-                                                                                for="star-2"></label>
-                                                                            <input class="star star-1" id="star-1"
-                                                                                type="radio" name="star" />
-                                                                            <label class="star star-1"
-                                                                                for="star-1"></label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <p
-                                                                    style="color: #808080;font-size: small;
-                                                                    font-weight: lighter;font-family: Arial, Helvetica, sans-serif;">
-                                                                    Chạm vào một Ngôi sao để xếp hạng
+                                                                <p>Rating: 
+                                                                    <span class="star-rating">
+                                                                        <label for="rate-1" style="--i:1"><i
+                                                                                class="fa-solid fa-star"></i></label>
+                                                                        <input type="radio" name="rating" id="rate-1"
+                                                                            value="1">
+
+                                                                        <label for="rate-2" style="--i:2"><i
+                                                                                class="fa-solid fa-star"></i></label>
+                                                                        <input type="radio" name="rating" id="rate-2"
+                                                                            value="2" checked>
+
+                                                                        <label for="rate-3" style="--i:3"><i
+                                                                                class="fa-solid fa-star"></i></label>
+                                                                        <input type="radio" name="rating" id="rate-3"
+                                                                            value="3">
+
+                                                                        <label for="rate-4" style="--i:4"><i
+                                                                                class="fa-solid fa-star"></i></label>
+                                                                        <input type="radio" name="rating" id="rate-4"
+                                                                            value="4">
+
+                                                                        <label for="rate-5" style="--i:5"><i
+                                                                                class="fa-solid fa-star"></i></label>
+                                                                        <input type="radio" name="rating" id="rate-5"
+                                                                            value="5">
+                                                                    </span>
                                                                 </p>
                                                                 <div class="row" style="padding-top: 20px;">
                                                                     <div class="col-xl-8">
@@ -227,7 +224,8 @@
                                                 </div>
                                                 <div class="mt-3" th:if="${bill.key.status} == 'Đã thanh toán'"
                                                     style="width: fit-content;">
-                                                    <button type="button" class="btn btn-primary btn-coral">Mua
+                                                    <button type="button" class="btn btn-primary btn-coral"
+                                                        th:onclick="'acquisition(' + ${bill.key.id} + ')'">Mua
                                                         lại</button>
                                                 </div>
                                                 <div class="mt-3" th:if="${bill.key.status} == 'Đã hủy'"

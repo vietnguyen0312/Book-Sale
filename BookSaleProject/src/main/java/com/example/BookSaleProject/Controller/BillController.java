@@ -53,22 +53,20 @@ public class BillController {
         billProBoxs.clear();
         biHashMap.clear();
         total = 0;
-        String idCartPro[] = ids.split(",");
         HttpSession session = request.getSession();
         user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         bill = new Bill(0, user, LocalDateTime.now().withNano(0), "Chưa thanh toán");
         billService.addNew(bill);
         bill = billService.getAll().get(billService.getAll().size() - 1);
+        String idCartPro[] = ids.split(",");
         for (String id : idCartPro) {
             CartProBox cartProBox = cartProBoxService.getById(Integer.parseInt(id));
             BillProBox billProBox = new BillProBox(0, bill, cartProBox.getBook(), cartProBox.getSL());
             cartProBox.getBook().setSL(cartProBox.getBook().getSL() - cartProBox.getSL());
             bookService.update(cartProBox.getBook());
-            // history = new History(0, bill, "");
             billProBoxs.add(billProBox);
             billProBoxService.addNew(billProBox);
             cartProBoxService.delete(Integer.parseInt(id));
-            // historyService.addNew(history);
         }
         for (BillProBox billProBox : billProBoxs) {
             total += billProBox.getSL() * billProBox.getBook().getPrice();
@@ -99,11 +97,37 @@ public class BillController {
         return "Payment";
     }
 
+    // Mua lại sản phẩm
+    @GetMapping(value = "/acquisition")
+    public String acquisition(Model model, HttpServletRequest request, @RequestParam("idBill") String idBill) {
+        billProBoxs.clear();
+        biHashMap.clear();
+        total = 0;
+        HttpSession session = request.getSession();
+        user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        bill = new Bill(0, user, LocalDateTime.now().withNano(0), "Chưa thanh toán");
+        billService.addNew(bill);
+        bill = billService.getAll().get(billService.getAll().size() - 1);
+        for (BillProBox billProBox : billProBoxService.getByIdBill(billService.getById(Integer.parseInt(idBill)))) {
+            billProBox.setBill(bill);
+            billProBoxs.add(billProBox);
+            billProBoxService.addNew(billProBox);
+        }
+        for (BillProBox billProBox : billProBoxs) {
+            total += billProBox.getSL() * billProBox.getBook().getPrice();
+            biHashMap.put(billProBox, billProBox.getSL() * billProBox.getBook().getPrice());
+        }
+        model.addAttribute("total", total);
+        model.addAttribute("bill", bill);
+        model.addAttribute("bookTypeList", bookTypeService.getAll());
+        model.addAttribute("billProBoxs", biHashMap);
+        return "Payment";
+    }
+
     @PostMapping(value = "/showOrder")
     public String showOrder(Model model) {
         bill.setStatus("Đã thanh toán");
         billService.update(bill);
-        System.out.println(bill.toString());
         model.addAttribute("total", total);
         model.addAttribute("user", bill.getUser());
         model.addAttribute("bill", bill);
@@ -114,12 +138,12 @@ public class BillController {
     }
 
     @PostMapping(value = "/cancelBill")
-    public ResponseEntity<String> cancelBill(@RequestParam("idBill")String idBill) {
+    public ResponseEntity<String> cancelBill(@RequestParam("idBill") String idBill) {
         bill = billService.getById(Integer.parseInt(idBill));
         ArrayList<BillProBox> billProBoxs = billProBoxService.getByIdBill(bill);
-        for (BillProBox billProBox  : billProBoxs) {
+        for (BillProBox billProBox : billProBoxs) {
             Book book = bookService.getByID(billProBox.getBook().getId());
-            book.setSL(book.getSL()+billProBox.getSL());
+            book.setSL(book.getSL() + billProBox.getSL());
             bookService.update(book);
         }
         bill.setStatus("Đã hủy");
@@ -132,16 +156,17 @@ public class BillController {
         HttpSession session = request.getSession();
         User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
         model.addAttribute("bookTypeList", bookTypeService.getAll());
-        if (billService.getByIdUser(user) == null) {
+        ArrayList<Bill> billUser = billService.getByIdUser(user);
+        if (billUser == null) {
             return "BillView";
         }
-        ArrayList<Bill> billUser = billService.getByIdUser(user);
         HashMap<Bill, HashMap<BillProBox, Float>> bHashMap = new HashMap<>(); // gồm bill và các sản phẩm trong bill
         for (Bill bill : billUser) {
             HashMap<BillProBox, Float> hashMap = new HashMap<>(); // gồm sản phẩm và tổng giá tiền của nó (Sl x đơn giá)
             for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
                 hashMap.put(billProBox, billProBox.getSL() * billProBox.getBook().getPrice());
             }
+            
             bHashMap.put(bill, hashMap);
         }
         model.addAttribute("bills", bHashMap);
