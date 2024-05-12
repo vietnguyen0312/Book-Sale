@@ -1,6 +1,7 @@
 package com.example.BookSaleProject.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.example.BookSaleProject.Model.Entity.Cart;
@@ -15,7 +18,6 @@ import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BillService;
 import com.example.BookSaleProject.Model.Service.CartService;
 import com.example.BookSaleProject.Model.Service.UserService;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +31,6 @@ public class UserController {
     UserService userService = new UserService();
     BillService billService = new BillService();
     CartService cartService = new CartService();
-
 
     @GetMapping(value = "/")
     public String showLogin(Model model, HttpServletRequest request, HttpSession session) {
@@ -138,6 +139,34 @@ public class UserController {
         userService.addNew(user);
         cartService.addNew(new Cart(0, userService.getUserByEmail(user.getEmail())));
         model.addAttribute("Message", "Đăng kí thành công");
+        return "login";
+    }
+
+    @GetMapping(value = "/showMissPassword")
+    public String showMissPassword(Model model) {
+        return "MissPassword";
+    }
+
+    @GetMapping(value = "/missPassword")
+    public ResponseEntity<String> missPassword(@RequestParam("email") String email) {
+        ArrayList<User> users = userService.getAllUser();
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                Random random = new Random();
+                int randomNumber = random.nextInt(90000) + 10000;
+                userService.sendMail(user.getEmail(), "Code Login for you",
+                        randomNumber + "");
+                return ResponseEntity.ok().body(""+randomNumber);
+            }
+        }
+        return ResponseEntity.badRequest().body("Tài khoản không tồn tại");
+    }
+
+    @PostMapping(value = "/refreshPassword")
+    public String refreshPassword(@RequestParam(name = "newPassword")String newPassword, @RequestParam("email")String email) {
+        User user = userService.getUserByEmail(email);
+        user.setPassword(newPassword);
+        userService.update(user);
         return "login";
     }
 
