@@ -60,7 +60,11 @@ function billCancel(idBill) {
 //Đánh giá sản phẩm
 function ratingBook(idbook) {
     const pop = document.querySelector("#popchat");
+    // Get the selected rating score
+    const score = document.querySelector('input[name="rating"]:checked').value;
 
+    // Get the comment
+    const comment = document.querySelector('#comment'+idbook).value;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/book/rating?idBook=" + idbook + "&comment=" + comment + "&score=" + score, true);
     xhr.onreadystatechange = function () {

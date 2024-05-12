@@ -69,10 +69,9 @@
                         <label class="placeholder-label" th:if="${#strings.isEmpty(user?.email)}">Email của bạn</label>
                     </div>
 
-                    <div data-mdb-input-init class="form-outline" style="position: relative;">
-                        <input class="form-control form-control-lg" placeholder=" "
-                            style="width: 100%; height: 150px; text-align: left;">
-                        <label class="placeholder-label">Viết bình luận</label>
+                    <div class="comment-section" style="padding-top: 10px;">
+                        <textarea placeholder="Nhận xét (Tùy chọn)"
+                            style="width: 100%; border: 1px solid #ccc;height: 150px;border-radius: 5px;"></textarea>
                     </div>
                 </div>
                 <div class="col" style="padding-top: 40px;">

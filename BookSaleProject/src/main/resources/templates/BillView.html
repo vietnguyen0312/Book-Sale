@@ -155,43 +155,56 @@
                                                         role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-body">
-                                                                <p th:text="${billProBox.key.book.id}"></p>
-                                                                <p>Rating: 
+                                                                <p>Rating:
                                                                     <span class="star-rating">
-                                                                        <label for="rate-1" style="--i:1"><i
+                                                                        <label
+                                                                            th:for="|rate-${billProBox.key.book.id}-1|"
+                                                                            style="--i:1"><i
                                                                                 class="fa-solid fa-star"></i></label>
-                                                                        <input type="radio" name="rating" id="rate-1"
-                                                                            value="1">
+                                                                        <input type="radio" name="rating"
+                                                                            th:id="|rate-${billProBox.key.book.id}-1|"
+                                                                            value="1" checked>
 
-                                                                        <label for="rate-2" style="--i:2"><i
+                                                                        <label
+                                                                            th:for="|rate-${billProBox.key.book.id}-2|"
+                                                                            style="--i:2"><i
                                                                                 class="fa-solid fa-star"></i></label>
-                                                                        <input type="radio" name="rating" id="rate-2"
-                                                                            value="2" checked>
+                                                                        <input type="radio" name="rating"
+                                                                            th:id="|rate-${billProBox.key.book.id}-2|"
+                                                                            value="2">
 
-                                                                        <label for="rate-3" style="--i:3"><i
+                                                                        <label
+                                                                            th:for="|rate-${billProBox.key.book.id}-3|"
+                                                                            style="--i:3"><i
                                                                                 class="fa-solid fa-star"></i></label>
-                                                                        <input type="radio" name="rating" id="rate-3"
+                                                                        <input type="radio" name="rating"
+                                                                            th:id="|rate-${billProBox.key.book.id}-3|"
                                                                             value="3">
 
-                                                                        <label for="rate-4" style="--i:4"><i
+                                                                        <label
+                                                                            th:for="|rate-${billProBox.key.book.id}-4|"
+                                                                            style="--i:4"><i
                                                                                 class="fa-solid fa-star"></i></label>
-                                                                        <input type="radio" name="rating" id="rate-4"
+                                                                        <input type="radio" name="rating"
+                                                                            th:id="|rate-${billProBox.key.book.id}-4|"
                                                                             value="4">
 
-                                                                        <label for="rate-5" style="--i:5"><i
+                                                                        <label
+                                                                            th:for="|rate-${billProBox.key.book.id}-5|"
+                                                                            style="--i:5"><i
                                                                                 class="fa-solid fa-star"></i></label>
-                                                                        <input type="radio" name="rating" id="rate-5"
+                                                                        <input type="radio" name="rating"
+                                                                            th:id="|rate-${billProBox.key.book.id}-5|"
                                                                             value="5">
                                                                     </span>
                                                                 </p>
-                                                                <div class="row" style="padding-top: 20px;">
-                                                                    <div class="col-xl-8">
-                                                                        <hr>
-                                                                        <input type="text"
-                                                                            placeholder="Nhân xét(Tùy chọn)"
-                                                                            th:id="comment">
-                                                                    </div>
-                                                                    <div class="col">
+                                                                <div class="comment-section" style="padding-top: 10px;">
+                                                                    <textarea placeholder="Nhận xét (Tùy chọn)"
+                                                                        style="width: 100%; border: 1px solid #ccc;height: 100px;"
+                                                                        th:id="'comment' + ${billProBox.key.book.id}"></textarea>
+                                                                </div>
+                                                                <div class="row justify-content-end mt-3">
+                                                                    <div class="col-auto">
                                                                         <button class="btn btn-success"
                                                                             th:onclick="'ratingBook(' + ${billProBox.key.book.id} + ')'">
                                                                             Gửi đánh giá
