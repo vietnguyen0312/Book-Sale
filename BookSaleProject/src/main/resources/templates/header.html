@@ -9,7 +9,7 @@
 <body>
     <div th:fragment="header">
         <header>
-            <div class="container-fluid" style="background-color: #01a14b; height: 20%;">
+            <div class="container-fluid" style="background-color: #01a14b; max-height: 20%;">
 
                 <div class="row">
                     <div class="col-sm-1"></div>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="col-sm-4" style="margin-top:10px;">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm-4">
                                 <div th:if="${session.userEmail==null}">
                                     <a th:href="@{/user/}"
                                         style="text-decoration: none; color: white; font-size: small;"
@@ -108,13 +108,12 @@
                                 </div>
                                 <div th:unless="${session.userEmail==null}">
                                     <div class="dropdown">
-                                        <a style="text-decoration: none; color: white;cursor: pointer;
-                                            overflow: hidden;text-overflow: ellipsis;max-width: 110px;">
+                                        <div style="text-decoration: none; color: white;cursor: pointer;">
                                             <i class="fa-solid fa-user"></i>
-                                            <p th:text="'  '+${session.userName}" style="display: inline-flex;font-family:Arial, Helvetica, sans-serif;
+                                            <p th:text="'  '+${session.userName}" style="display: inline;font-family:Arial, Helvetica, sans-serif;
                                                     font-weight: lighter;">
                                             </p>
-                                        </a>
+                                        </div>
                                         <div class="dropdown-content">
                                             <div>
                                                 <a th:href="@{/user/userInfo}">

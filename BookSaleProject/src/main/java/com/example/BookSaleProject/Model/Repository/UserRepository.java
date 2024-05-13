@@ -73,7 +73,7 @@ public class UserRepository {
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
                     BaseConnection.password);
             PreparedStatement prsm = con.prepareStatement
-            ("Update BOOKSALE.BookType set username=?,password=?,sdt=?,address=? where id =?");
+            ("Update BOOKSALE.user set username=?,password=?,sdt=?,address=? where id =?");
             prsm.setString(1, user.getUsername());
             prsm.setString(2, user.getPassword());
             prsm.setString(3, user.getSdt());

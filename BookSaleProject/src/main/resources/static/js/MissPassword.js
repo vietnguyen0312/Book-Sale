@@ -1,17 +1,18 @@
 var code;
 
 function checkEmail(email) {
+    // Ẩn div hiện tại
+    document.getElementById("emailForm").style.display = "none";
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/user/missPassword?email=" + email, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 code = xhr.responseText;
-                // Ẩn div hiện tại
-                document.getElementById("emailForm").style.display = "none";
                 // Hiện div để nhập mã xác nhận
                 document.getElementById("verifyForm").style.display = "block";
             } else {
+                document.getElementById("emailForm").style.display = "block";
                 // Phản hồi lỗi
                 alert(xhr.responseText); // Hiển thị thông báo từ máy chủ
 
@@ -113,7 +114,21 @@ function checkPassword() {
 
     if (password !== passwordAgain) {
         alert("Mật khẩu nhập lại không khớp.");
-        return false; // Ngăn chặn form được gửi đi
+        return;
     }
-    return true; // Cho phép form được gửi đi nếu hai mật khẩu khớp nhau
+
+    var email = document.getElementById('email').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/user/refreshPassword?email=" + email + "&newPassword=" + password, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                window.location.href = xhr.responseText;
+            } else {
+                document.getElementById('password').style.borderColor = "red";
+                document.getElementById('passwordAgain').style.borderColor = "red";
+            }
+        }
+    };
+    xhr.send();
 }

@@ -111,7 +111,6 @@ public class UserController {
             @RequestParam(name = "passAgain") String pass) {
         user1.setRole(2);
         user1.setId(0);
-        user1.setAddress(null);
         if (pass.equals(user1.getPassword())) {
             if (userService.getInvalidAttributes(user1).isEmpty() || userService.getInvalidAttributes(user1) == null) {
                 Random random = new Random();
@@ -156,18 +155,22 @@ public class UserController {
                 int randomNumber = random.nextInt(90000) + 10000;
                 userService.sendMail(user.getEmail(), "Code Login for you",
                         randomNumber + "");
-                return ResponseEntity.ok().body(""+randomNumber);
+                return ResponseEntity.ok().body("" + randomNumber);
             }
         }
         return ResponseEntity.badRequest().body("Tài khoản không tồn tại");
     }
 
     @PostMapping(value = "/refreshPassword")
-    public String refreshPassword(@RequestParam(name = "newPassword")String newPassword, @RequestParam("email")String email) {
-        User user = userService.getUserByEmail(email);
-        user.setPassword(newPassword);
-        userService.update(user);
-        return "login";
+    public ResponseEntity<String> refreshPassword(@RequestParam(name = "newPassword") String newPassword,
+            @RequestParam("email") String email) {
+        if (userService.checkValidatePass(newPassword)) {
+            User user = userService.getUserByEmail(email);
+            user.setPassword(newPassword);
+            userService.update(user);
+            return ResponseEntity.ok().body("/user/");  
+        }
+        return ResponseEntity.badRequest().body("Mật khẩu quá ngắn");
     }
 
     @GetMapping(value = "/userInfo")

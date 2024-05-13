@@ -75,10 +75,10 @@ public class UserService implements IUserService {
         return false;
     }
     
-    private static final Predicate<String> EMAIL_VALIDATOR = email -> email
+    private final Predicate<String> EMAIL_VALIDATOR = email -> email
             .matches("^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,}$");
 
-    private static final Predicate<String> PASSWORD_VALIDATOR = password -> password.length() >= 8;
+    static final Predicate<String> PASSWORD_VALIDATOR = password -> password.length() >= 8;
 
     private static final Predicate<String> PHONE_VALIDATOR = phone -> phone.matches("^\\d{10}$");
 
@@ -100,6 +100,14 @@ public class UserService implements IUserService {
         }
         return invalidAttributes;
     }
+
+    public boolean checkValidatePass(String password) {
+        if (!PASSWORD_VALIDATOR.test(password)) {
+            return false;
+        }
+        return true;
+    }
+
     @Autowired
     private JavaMailSender mailSender;
 
