@@ -46,33 +46,38 @@
                     <p style="font-family: Arial, Helvetica, sans-serif;font-weight: lighter;font-size: x-large;">Viết
                         nhận xét</p>
                     <hr><br>
-                    <p class="lead fw-normal" style="color: #808080;font-size: medium;">Nếu bạn có thắc mắc gì, có thể
+                    <p class="lead fw-normal" style="color: #808080;font-size: medium;z-index: 2;" id="popchat">Nếu bạn có thắc mắc gì, có thể
                         gửi yêu cầu cho chúng tôi, và chúng tôi sẽ liên lạc lại với bạn sớm nhất có thể .</p>
-
+                    <br>
                     <div data-mdb-input-init class="form-outline mb-4" style="position: relative;">
-                        <input class="form-control form-control-lg" placeholder=" "
+                        <input class="form-control form-control-lg" placeholder=" " type="text"
                             th:if="${not #strings.isEmpty(user?.username)}" th:value="${user.username}"
+                            style="width: 100%; height: 50px; text-align: left; padding-top: 20px;" id="name">
+                        <input class="form-control form-control-lg" placeholder=" " type="text"
+                            th:unless="${not #strings.isEmpty(user?.username)}" id="name"
                             style="width: 100%; height: 50px; text-align: left; padding-top: 20px;">
-                        <input class="form-control form-control-lg" placeholder=" "
-                            th:unless="${not #strings.isEmpty(user?.username)}"
-                            style="width: 100%; height: 50px; text-align: left; padding-top: 20px;">
-                        <label class="placeholder-label" th:if="${#strings.isEmpty(user?.username)}">Tên của bạn</label>
+                        <label class="placeholder-label" th:if="${#strings.isEmpty(user?.username)}">Tên của
+                            bạn</label>
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4" style="position: relative;">
-                        <input class="form-control form-control-lg" placeholder=" "
+                        <input class="form-control form-control-lg" placeholder=" " id="email" type="email"
                             th:if="${not #strings.isEmpty(user?.email)}" th:value="${user.email}"
                             style="width: 100%; height: 50px; text-align: left; padding-top: 20px;">
-                        <input class="form-control form-control-lg" placeholder=" "
-                            th:unless="${not #strings.isEmpty(user?.email)}"
+                        <input class="form-control form-control-lg" placeholder=" " type="email"
+                            th:unless="${not #strings.isEmpty(user?.email)}" id="email"
                             style="width: 100%; height: 50px; text-align: left; padding-top: 20px;">
-                        <label class="placeholder-label" th:if="${#strings.isEmpty(user?.email)}">Email của bạn</label>
+                        <label class="placeholder-label" th:if="${#strings.isEmpty(user?.email)}">Email của
+                            bạn</label>
                     </div>
 
-                    <div class="comment-section" style="padding-top: 10px;">
-                        <textarea placeholder="Nhận xét (Tùy chọn)"
+                    <div class="comment-section">
+                        <textarea placeholder="Nhận xét (Tùy chọn)" id="comment"
                             style="width: 100%; border: 1px solid #ccc;height: 150px;border-radius: 5px;"></textarea>
                     </div>
+
+                    <button class="btn btn-primary" onclick="sendFeedback()">Gửi liên hệ</button>
+
                 </div>
                 <div class="col" style="padding-top: 40px;">
                     <p style="font-family: Arial, Helvetica, sans-serif; font-weight: lighter; font-size: x-large;">
@@ -99,7 +104,7 @@
     <footer th:insert="~{footer :: footer}"></footer>
     <script th:src="@{/js/reUse.js}"></script>
     <script th:src="@{/js/Search.js}"></script>
-
+    <script th:src="@{/js/Contact.js}"></script>
 </body>
 
 </html>
