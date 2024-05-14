@@ -16,6 +16,7 @@ import java.util.Random;
 import com.example.BookSaleProject.Model.Entity.Cart;
 import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BillService;
+import com.example.BookSaleProject.Model.Service.BookTypeService;
 import com.example.BookSaleProject.Model.Service.CartService;
 import com.example.BookSaleProject.Model.Service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -161,20 +162,25 @@ public class UserController {
         return ResponseEntity.badRequest().body("Tài khoản không tồn tại");
     }
 
-    @PostMapping(value = "/refreshPassword")
+    @PostMapping(value = "/changePass")
     public ResponseEntity<String> refreshPassword(@RequestParam(name = "newPassword") String newPassword,
             @RequestParam("email") String email) {
         if (userService.checkValidatePass(newPassword)) {
             User user = userService.getUserByEmail(email);
             user.setPassword(newPassword);
             userService.update(user);
-            return ResponseEntity.ok().body("/user/");  
+            return ResponseEntity.ok().body("/user/");
         }
         return ResponseEntity.badRequest().body("Mật khẩu quá ngắn");
     }
 
     @GetMapping(value = "/userInfo")
     public String userInfo(Model model, HttpServletRequest request) {
+        BookTypeService bookTypeService = new BookTypeService();
+        HttpSession session = request.getSession();
+        User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        model.addAttribute("user", user);
+        model.addAttribute("bookTypeList", bookTypeService.getAll());
         return "UserInfor";
     }
 }

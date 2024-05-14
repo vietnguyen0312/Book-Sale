@@ -20,6 +20,8 @@ import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.BookType;
 import com.example.BookSaleProject.Model.Entity.Rate;
 import com.example.BookSaleProject.Model.Entity.User;
+import com.example.BookSaleProject.Model.Service.BillProBoxService;
+import com.example.BookSaleProject.Model.Service.BillService;
 import com.example.BookSaleProject.Model.Service.BookService;
 import com.example.BookSaleProject.Model.Service.BookTypeService;
 import com.example.BookSaleProject.Model.Service.RateService;
@@ -37,6 +39,8 @@ public class BookController {
     BookTypeService bookTypeService = new BookTypeService();
     RateService rateService = new RateService();
     UserService userService = new UserService();
+    BillService billService = new BillService();
+    BillProBoxService billProBoxService = new BillProBoxService();
 
     HashMap<Book, Float> bookRate = new HashMap<Book, Float>();
     ArrayList<Book> bookList = new ArrayList<>();
@@ -181,13 +185,6 @@ public class BookController {
                 bookList.add(entry.getKey());
             }
         }
-        return getBookList(model, "1");
-    }
-    
-    @GetMapping(value = "/getBestSellingBook")
-    public String getBestSellingBook(Model model) {
-        bookList.clear();
-        title = "SÁCH BÁN CHẠY";
         return getBookList(model, "1");
     }
 

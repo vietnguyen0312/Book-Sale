@@ -19,29 +19,33 @@ label.btn {
 }
 
 .btn-outline-primary {
-    border-color: #26B4FF;
+    border-color: #01a14b;
     background  : transparent;
-    color       : #26B4FF;
+    color       : #01a14b;
 }
 
 .btn {
+    background-color: #01a14b;
+    border: #01a14b;
+    color: white;
     cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #01a14b;
+    border: #01a14b;
+    opacity: 0.7;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #f5f5f5;
+    background-color: #01a14b;
+    border-color: #01a14b
 }
 
 .text-light {
     color: #babbbc !important;
-}
-
-.btn-facebook {
-    border-color: rgba(0, 0, 0, 0);
-    background  : #3B5998;
-    color       : #fff;
-}
-
-.btn-instagram {
-    border-color: rgba(0, 0, 0, 0);
-    background  : #000;
-    color       : #fff;
 }
 
 .card {
@@ -55,4 +59,12 @@ label.btn {
 
 .card:hover{
     transform: none;
+}
+
+.card-body p.form-control {
+    border: none;
+}
+
+label {
+    color: #808080;
 }

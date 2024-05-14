@@ -69,12 +69,12 @@
     margin-left: 10px;
 }
 .btn-coral {
-    background-color: coral;
-    border-color: coral;
+    background-color: #01a14b;
+    border-color: #01a14b;
 }
 .btn-coral:hover {
-    background-color: #ff6f61; /* Màu hover */
-    border-color: #ff6f61; /* Màu border khi hover */
+    background-color: #01a14b; /* Màu hover */
+    border-color: #01a14b; /* Màu border khi hover */
 }
 
 #popchat {
