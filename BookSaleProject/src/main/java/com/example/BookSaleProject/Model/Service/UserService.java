@@ -68,7 +68,7 @@ public class UserService implements IUserService {
     public boolean toLogin(User user) {
         getAllUser();
         for (User user1 : userList) {
-            if (user1.getEmail().equals(user.getEmail()) && user1.getPassword().equals(user.getPassword())) {
+            if (user1.getEmail().equals(user.getEmail()) && user.getPassword().equals(user1.getPassword())) {
                 return true;
             }
         }

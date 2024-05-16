@@ -7,10 +7,10 @@ public class User {
     private String email;
     private String sdt;
     private String address;
-    private int role;
+    private String role;
 
     public User(int id, String username, String password, String email, String sdt, String address,
-            int role) {
+            String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -71,11 +71,11 @@ public class User {
         this.address = address;
     }
 
-    public int getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

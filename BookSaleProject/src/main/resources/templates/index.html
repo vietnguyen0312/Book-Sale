@@ -54,7 +54,7 @@
 
   <div style="padding-top: 40px;">
     <p class="h2" style="font-weight: bolder;text-align: center;">SÁCH MỚI</p>
-    <div class="row" style="padding-top: 20px;">
+    <div class="row" style="padding-top: 20px;" th:if="${newBookList}!=null">
       <div class="col-sm-2"></div>
       <div class="col-sm-8">
         <div class="row">
@@ -251,7 +251,7 @@
 
   <div style="padding-top: 40px;">
     <p class="h2" style="font-weight: bolder;text-align: center;">SÁCH ĐƯỢC YÊU THÍCH</p>
-    <div class="row" style="padding-top: 20px;">
+    <div class="row" style="padding-top: 20px;" th:if="${favouriteBookList}!=null">
       <div class="col-sm-2"></div>
       <div class="col-sm-8">
         <div class="row">

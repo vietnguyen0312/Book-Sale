@@ -57,7 +57,7 @@ public class UserController {
             @RequestParam(value = "rememberme", required = false) Boolean rememberme) {
         user1.setAddress(null);
         user1.setId(0);
-        user1.setRole(0);
+        user1.setRole(null);
         user1.setSdt(null);
         user1.setUsername(null);
         boolean flag = userService.toLogin(user1);
@@ -79,6 +79,7 @@ public class UserController {
         } else {
             return showLogin(model, request, session);
         }
+        model.addAttribute("Message", "ERROR");
         return showLogin(model, request, session);
     }
 
@@ -110,7 +111,7 @@ public class UserController {
     @PostMapping(value = "/register")
     public String toRegister(Model model, @ModelAttribute("user") User user1,
             @RequestParam(name = "passAgain") String pass) {
-        user1.setRole(2);
+        user1.setRole("USER");
         user1.setId(0);
         if (pass.equals(user1.getPassword())) {
             if (userService.getInvalidAttributes(user1).isEmpty() || userService.getInvalidAttributes(user1) == null) {

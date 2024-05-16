@@ -72,12 +72,15 @@ public class BookController {
         HashMap<Book, Float> topRatedBooks = new HashMap<Book, Float>();
         while (topRatedBooks.size() < 3 && !bookRateList.isEmpty()) {
             Book topBook = null;
-            float maxRating = Float.MIN_VALUE;
+            float maxRating = 0;
             for (Map.Entry<Book, Float> entry : bookRateList.entrySet()) {
                 if (entry.getValue() > maxRating) {
                     maxRating = entry.getValue();
                     topBook = entry.getKey();
                 }
+            }
+            if (maxRating < 4) {
+                break;
             }
             if (topBook != null) {
                 topRatedBooks.put(topBook, maxRating);

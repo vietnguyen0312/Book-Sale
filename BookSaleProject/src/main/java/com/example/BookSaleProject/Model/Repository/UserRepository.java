@@ -12,7 +12,7 @@ import com.example.BookSaleProject.Model.Entity.User;
 public class UserRepository {
     ArrayList<User> userList = new ArrayList<>();
 
-    public ArrayList<User> getAllUser(){
+    public ArrayList<User> getAllUser() {
         try {
             userList.clear();
             Class.forName(BaseConnection.nameClass);
@@ -27,7 +27,7 @@ public class UserRepository {
                 String email = resultSet.getString("email");
                 String sdt = resultSet.getString("sdt");
                 String address = resultSet.getString("address");
-                int role = resultSet.getInt("Role");
+                String role = resultSet.getString("Role");
                 User user = new User(id, userName, password, email, sdt, address, role);
                 userList.add(user);
             }
@@ -35,21 +35,19 @@ public class UserRepository {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        
+
         return userList;
     }
 
-
-
-    public User getUserById(int id){
+    public User getUserById(int id) {
         try {
             Class.forName(BaseConnection.nameClass);
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
                     BaseConnection.password);
             PreparedStatement prsm = con.prepareStatement("Select * from BOOKSALE.user where id=?");
-            prsm.setInt(1, id );
+            prsm.setInt(1, id);
             ResultSet resultSet = prsm.executeQuery();
-            if(!resultSet.next()){
+            if (!resultSet.next()) {
                 throw new IllegalArgumentException("Cannot Find");
             }
             String userName = resultSet.getString("username");
@@ -57,7 +55,7 @@ public class UserRepository {
             String email = resultSet.getString("email");
             String sdt = resultSet.getString("sdt");
             String address = resultSet.getString("address");
-            int role = resultSet.getInt("Role");
+            String role = resultSet.getString("Role");
             User user = new User(id, userName, password, email, sdt, address, role);
             return user;
 
@@ -67,13 +65,13 @@ public class UserRepository {
         return null;
     }
 
-    public boolean update(User user){
+    public boolean update(User user) {
         try {
             Class.forName(BaseConnection.nameClass);
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
                     BaseConnection.password);
-            PreparedStatement prsm = con.prepareStatement
-            ("Update BOOKSALE.user set username=?,password=?,sdt=?,address=? where id =?");
+            PreparedStatement prsm = con
+                    .prepareStatement("Update BOOKSALE.user set username=?,password=?,sdt=?,address=? where id =?");
             prsm.setString(1, user.getUsername());
             prsm.setString(2, user.getPassword());
             prsm.setString(3, user.getSdt());
@@ -88,12 +86,13 @@ public class UserRepository {
         return false;
     }
 
-    public boolean addNew(User user){
+    public boolean addNew(User user) {
         try {
             Class.forName(BaseConnection.nameClass);
             Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
-                BaseConnection.password);
-            PreparedStatement prsm = con.prepareStatement("Insert into BOOKSALE.user (username,password,email,sdt,address,Role) value (?,?,?,?,?,?)");
+                    BaseConnection.password);
+            PreparedStatement prsm = con.prepareStatement(
+                    "Insert into BOOKSALE.user (username,password,email,sdt,address,Role) value (?,?,?,?,?,?)");
             prsm.setString(1, user.getUsername());
             prsm.setString(2, user.getPassword());
             prsm.setString(3, user.getEmail());
