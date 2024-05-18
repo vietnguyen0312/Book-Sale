@@ -191,7 +191,7 @@ header {
 }
 
 .option1:hover {
-    border-left: 5px solid #010058af;
+    border-left: 5px solid #01a14b;
     background-color: var(--Border-color);
 }
 
@@ -395,4 +395,29 @@ header {
 
 .searchbtn:hover {
     background-color: #0056b3;
+}
+
+.nav-option {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+.nav-option.active {
+    background-color: #f0f0f0;
+}
+.main-container {
+    display: flex;
+}
+.navcontainer {
+    width: 200px;
+}
+.main {
+    flex: 1;
+    padding: 20px;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
 }

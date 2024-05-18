@@ -1,13 +1,19 @@
 package com.example.BookSaleProject.Controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.BookSaleProject.Model.Entity.Bill;
 import com.example.BookSaleProject.Model.Entity.BillProBox;
+import com.example.BookSaleProject.Model.Entity.Rate;
 import com.example.BookSaleProject.Model.Entity.User;
 import com.example.BookSaleProject.Model.Service.BillProBoxService;
 import com.example.BookSaleProject.Model.Service.BillService;
@@ -28,20 +34,30 @@ public class AdminController {
 
     @GetMapping("/")
     public String index(Model model) {
-        int totalAccount = 0, totalSaledBook = 0, totalBill = 0, totalComment = rateService.getAll().size();
+        int totalAccount = 0, totalSaledBook = 0, totalBill = 0, totalComment;
+        ArrayList<Rate> ratingAll = rateService.getAll();
+        if (ratingAll == null) {
+            totalComment = 0;
+        } else
+            totalComment = ratingAll.size();
 
-        for (User user : userService.getAllUser()) {
-            if (!user.getRole().equals("ADMIN")) {
-                totalAccount++;
+        if (userService.getAllUser() != null) {
+            for (User user : userService.getAllUser()) {
+                if (!user.getRole().equals("ADMIN")) {
+                    totalAccount++;
+                }
             }
         }
 
-        for (Bill bill : billService.getAll()) {
-            totalBill++;
-            for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
-                totalSaledBook += billProBox.getSL();
+        if (billService.getAll() != null) {
+            for (Bill bill : billService.getAll()) {
+                totalBill++;
+                for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
+                    totalSaledBook += billProBox.getSL();
+                }
             }
         }
+
         model.addAttribute("bookList", bookService.getAll());
         model.addAttribute("totalAccount", totalAccount);
         model.addAttribute("totalSaledBook", totalSaledBook);
@@ -49,4 +65,9 @@ public class AdminController {
         model.addAttribute("totalComment", totalComment);
         return "Admin/AdminDashBoard";
     }
+
+    @PostMapping(value = "/addBook")
+    public ResponseEntity<String> addBook(@RequestParam("name")String name) {
+        return ResponseEntity.ok().body(null);
+    } 
 }

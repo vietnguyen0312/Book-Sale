@@ -9,123 +9,155 @@
     <title>GeeksForGeeks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/AdminDashBoard.css}">
-    <link rel="stylesheet" href="/src/main/resources/static/css/AdminDashBoard.css">
 </head>
 
 <body>
-    <header>
 
-        <a class="logosec" style="cursor: pointer;">
-            <div class="logo">Book-Sale</div>
-        </a>
+    <body>
+        <header>
 
-        <div class="message">
-            <div class="circle"></div>
-            <div class="dp">
-            </div>
-        </div>
+            <a class="logosec" style="cursor: pointer;">
+                <div class="logo">Book-Sale</div>
+            </a>
 
-    </header>
-
-    <div class="main-container">
-        <div class="navcontainer">
-            <nav class="nav">
-                <div class="nav-upper-options">
-                    <div class="nav-option option1">
-                        <h3> Dashboard</h3>
-                    </div>
-
-                    <div class="nav-option logout">
-                        <h3>Logout</h3>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        <div class="main">
-
-            <div class="box-container">
-
-                <div class="box box1">
-                    <div class="text">
-                        <p class="h2 topic-heading" th:text="${totalAccount}"></p>
-                        <p class="h2 topic">Số lượng tài khoản</p>
-                    </div>
-                    <i class="fa-solid fa-user"></i>
-                </div>
-
-                <div class="box box2">
-                    <div class="text">
-                        <p class="h2 topic-heading" th:text="${totalSaledBook}"></p>
-                        <p class="h2 topic">Số lượng bán</p>
-                    </div>
-                    <i class="fa-solid fa-book"></i>
-                </div>
-
-                <div class="box box3">
-                    <div class="text">
-                        <p class="h2 topic-heading" th:text="${totalComment}"></p>
-                        <p class="h2 topic">Số lượt comment</p>
-                    </div>
-                    <i class="fa-solid fa-comment"></i>
-                </div>
-
-                <div class="box box4">
-                    <div class="text">
-                        <p class="h2 topic-heading" th:text="${totalBill}"></p>
-                        <p class="h2 topic">Số lượt đặt hàng</p>
-                    </div>
-                    <i class="fa-solid fa-money-bills"></i>
+            <div class="message">
+                <div class="circle"></div>
+                <div class="dp">
                 </div>
             </div>
 
-            <div class="report-container">
-                <div class="report-header">
-                    <h1 class="recent-Articles">Sản phẩm trong cửa hàng</h1>
-                    <div class="search-container">
-                        <input type="text" name="" id="search-input" placeholder="Search">
-                        <button class="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </header>
+
+        <div class="main-container">
+            <div class="navcontainer">
+                <nav class="nav">
+                    <div class="nav-upper-options">
+                        <div class="nav-option option1">
+                            <h3> Dashboard</h3>
+                        </div>
+
+                        <form th:action="@{/user/logout}">
+                            <button type="submit" class="nav-option logout">
+                                <h3>Logout</h3>
+                            </button>
+                        </form>
                     </div>
-                    <button class="view">Add Book</button>
-                    <button class="view">View All</button>
-                </div>
-                <div class="report-body">
-                    <table class="report-table">
-                        <thead>
-                            <tr>
-                                <th>Tên</th>
-                                <th>Thể loại</th>
-                                <th>Tác giả</th>
-                                <th>Đơn giá</th>
-                                <th>SL còn</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="book : ${bookList}">
-                                <td th:text="${book.name}"></td>
-                                <td th:text="${book.bookType.name}"></td>
-                                <td th:text="${book.author}"></td>
-                                <td th:text="${book.price} + ' đ'"></td>
-                                <td th:text="${book.SL}"></td>
-                                <td>
-                                    <button class="action-btn edit-btn" style="color: black;"
-                                        onmouseover="this.style.color='white'; this.style.textDecoration='underline'"
-                                        onmouseout="this.style.color='black'; this.style.textDecoration='none'">Sửa</button>
-                                    <button class="action-btn delete-btn" style="color: black;"
-                                        onmouseover="this.style.color='white'; this.style.textDecoration='underline'"
-                                        onmouseout="this.style.color='black'; this.style.textDecoration='none'">Xóa</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                </nav>
             </div>
+            <div class="main">
+
+                <div>
+                    <canvas id="myChart" style="width: 10px;height: 10px;"></canvas>
+
+                    <script>
+                        // Dữ liệu biểu đồ
+                        const data = {
+                            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5'],
+                            datasets: [{
+                                label: 'Doanh thu',
+                                backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'rgb(255, 99, 132)',
+                                data: [1000, 1500, 1200, 1800, 2000],
+                            }]
+                        };
+
+                        // Cấu hình biểu đồ
+                        const config = {
+                            type: 'line',
+                            data: data,
+                            options: {}
+                        };
+
+                        // Vẽ biểu đồ vào canvas
+                        var myChart = new Chart(
+                            document.getElementById('myChart'),
+                            config
+                        );
+                    </script>
+                </div>
+
+                <div class="box-container">
+
+                    <div class="box box1">
+                        <div class="text">
+                            <p class="h2 topic-heading" th:text="${totalAccount}"></p>
+                            <p class="h2 topic">Số lượng tài khoản</p>
+                        </div>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="box box2">
+                        <div class="text">
+                            <p class="h2 topic-heading" th:text="${totalSaledBook}"></p>
+                            <p class="h2 topic">Số lượng bán</p>
+                        </div>
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+
+                    <div class="box box3">
+                        <div class="text">
+                            <p class="h2 topic-heading" th:text="${totalComment}"></p>
+                            <p class="h2 topic">Số lượt comment</p>
+                        </div>
+                        <i class="fa-solid fa-comment"></i>
+                    </div>
+
+                    <div class="box box4">
+                        <div class="text">
+                            <p class="h2 topic-heading" th:text="${totalBill}"></p>
+                            <p class="h2 topic">Số lượt đặt hàng</p>
+                        </div>
+                        <i class="fa-solid fa-money-bills"></i>
+                    </div>
+                </div>
+
+                <div class="report-container">
+                    <div class="report-header">
+                        <h1 class="recent-Articles">Sản phẩm trong cửa hàng</h1>
+                        <div class="search-container">
+                            <input type="text" name="" id="search-input" placeholder="Search">
+                            <button class="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                        <button class="view">Add Book</button>
+                    </div>
+                    <div class="report-body">
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Tên</th>
+                                    <th>Thể loại</th>
+                                    <th>Tác giả</th>
+                                    <th>Đơn giá</th>
+                                    <th>SL còn</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="book : ${bookList}">
+                                    <td th:text="${book.name}"></td>
+                                    <td th:text="${book.bookType.name}"></td>
+                                    <td th:text="${book.author}"></td>
+                                    <td th:text="${book.price} + ' đ'"></td>
+                                    <td th:text="${book.SL}"></td>
+                                    <td>
+                                        <button class="action-btn edit-btn" style="color: black;"
+                                            onmouseover="this.style.color='white'; this.style.textDecoration='underline'"
+                                            onmouseout="this.style.color='black'; this.style.textDecoration='none'">Sửa</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
 
+            </div>
         </div>
-    </div>
 
-</body>
+        <script th:src="@{/js/BillView.js}"></script>
+
+    </body>
 
 </html>

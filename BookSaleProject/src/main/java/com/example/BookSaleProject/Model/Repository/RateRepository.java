@@ -44,6 +44,9 @@ public class RateRepository {
         } catch (Exception e) {
             // TODO: handle exception
         }
+        if (rateList.isEmpty()||rateList == null) {
+            return 0;
+        }
         float score = 0;
         for (Rate rate : rateList) {
             score += rate.getScore();

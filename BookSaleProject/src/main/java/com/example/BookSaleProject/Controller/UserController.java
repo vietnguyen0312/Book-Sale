@@ -39,10 +39,16 @@ public class UserController {
         User user = new User();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
+
                 if ("userCookie".equals(cookie.getName())) {
                     String userStr = cookie.getValue();
+                    user = userService.getUserByEmail(userStr);
                     session.setAttribute("userEmail", userStr);
-                    session.setAttribute("userName", userService.getUserByEmail(userStr).getUsername());
+                    session.setAttribute("userName", user.getUsername());
+                    session.setAttribute("roleUser", user.getRole());
+                    if (user.getRole().equals("ADMIN")) {
+                        return "redirect:/admin/";
+                    }
                     return "redirect:/";
                 }
             }
@@ -61,19 +67,28 @@ public class UserController {
         user1.setSdt(null);
         user1.setUsername(null);
         boolean flag = userService.toLogin(user1);
+        user1 = userService.getUserByEmail(user1.getEmail());
         if (Boolean.TRUE.equals(rememberme)) {
             if (flag) {
                 Cookie cookie = new Cookie("userCookie", user1.getEmail());
                 cookie.setMaxAge(60 * 60);
                 response.addCookie(cookie);
                 session.setAttribute("userEmail", user1.getEmail());
-                session.setAttribute("userName", userService.getUserByEmail(user1.getEmail()).getUsername());
+                session.setAttribute("userName", user1.getUsername());
+                session.setAttribute("roleUser", user1.getRole());
+                if (user1.getRole().equals("ADMIN")) {
+                    return "redirect:/admin/";
+                }
                 return "redirect:/";
             }
         } else if (!Boolean.TRUE.equals(rememberme)) {
             if (flag) {
                 session.setAttribute("userEmail", user1.getEmail());
-                session.setAttribute("userName", userService.getUserByEmail(user1.getEmail()).getUsername());
+                session.setAttribute("userName", user1.getUsername());
+                session.setAttribute("roleUser", user1.getRole());
+                if (user1.getRole().equals("ADMIN")) {
+                    return "redirect:/admin/";
+                }
                 return "redirect:/";
             }
         } else {
@@ -97,6 +112,7 @@ public class UserController {
         }
         session.removeAttribute("userName");
         session.removeAttribute("userEmail");
+        session.removeAttribute("roleUser");
         return "redirect:/";
     }
 
@@ -183,5 +199,10 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("bookTypeList", bookTypeService.getAll());
         return "UserInfor";
+    }
+
+    @GetMapping(value = "/error")
+    public String showError() {
+        return "403";
     }
 }

@@ -228,8 +228,8 @@ public class BookController {
         return getBookList(model, "1");
     }
 
-    @GetMapping(value = "/search", produces = "text/plain;charset=UTF-8")
-    public String searchBook(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
+    @GetMapping(value = "/search")
+    public String searchBook(Model model, @RequestParam(value = "keyword") String keyword) {
         bookList.clear();
         title = "Kết quả tìm kiếm (" + keyword + ")";
         bookList = bookService.search(keyword);
