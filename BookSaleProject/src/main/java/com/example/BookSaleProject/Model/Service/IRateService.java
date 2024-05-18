@@ -9,4 +9,5 @@ public interface IRateService {
     public float getScoreByIdBook(Book book);
     public ArrayList<Rate> getByIdBook(Book book);
     public boolean addNew(Rate rate);
+    public ArrayList<Rate> getAll();
 }

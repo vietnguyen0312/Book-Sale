@@ -97,4 +97,29 @@ public class RateRepository {
         }
         return false;
     }
+
+    public ArrayList<Rate> getAll() {
+        try {
+            rateList.clear();
+            Class.forName(BaseConnection.nameClass);
+            Connection con = DriverManager.getConnection(BaseConnection.url, BaseConnection.username,
+                    BaseConnection.password);
+            Statement stml = con.createStatement();
+            ResultSet resultSet = stml.executeQuery("Select * from BOOKSALE.rate");
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                User user = userRepository.getUserById(resultSet.getInt("idUser"));
+                float score = resultSet.getInt("rateScore");
+                Book book = bookRepository.getByID(resultSet.getInt("idBook"));
+                String comment = resultSet.getString(("comment"));
+                LocalDateTime localDateTime = LocalDateTime.parse(resultSet.getString("Date"), formatter);
+                Rate rate = new Rate(id, user, book, score, comment, localDateTime);
+                rateList.add(rate);
+            }
+            con.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return rateList;
+    }
 }

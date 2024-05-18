@@ -40,5 +40,14 @@ public class RateService implements IRateService {
         return false;
     }
 
+    @Override
+    public ArrayList<Rate> getAll() {
+        ArrayList<Rate> rates = rateRepository.getAll();
+        if (!(rates.isEmpty())) {
+            return rates;
+        }
+        return null;
+    }
+
 
 }
