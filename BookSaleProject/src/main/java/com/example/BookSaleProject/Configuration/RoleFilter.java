@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class RoleFilter implements Filter {
 
     private static final List<String> EXCLUDED_PATHS = Arrays.asList("/user/", "/book/", "/client/",
-            "/css/", "/images/", "/js/");
+        "/css/", "/images/", "/js/");
 
     private static final List<String> USER_PATHS = Arrays.asList("/cart/", "/bill/");
 
@@ -27,7 +27,6 @@ public class RoleFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String path = httpServletRequest.getServletPath();
-        System.out.println(path);
         if (EXCLUDED_PATHS.stream().anyMatch(path::startsWith) || path.equals("/")) {
             chain.doFilter(request, response);
             return;

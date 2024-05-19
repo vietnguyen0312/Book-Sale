@@ -1,17 +1,30 @@
-function openTab(event, tabId) {
-    // Hide all tab content
-    var contents = document.getElementsByClassName('tab-content');
-    for (var i = 0; i < contents.length; i++) {
-        contents[i].classList.remove('active');
-    }
+const ctx = document.getElementById('myChart');
 
-    // Remove active state from all tab links
-    var options = document.getElementsByClassName('nav-option');
-    for (var i = 0; i < options.length; i++) {
-        options[i].classList.remove('active');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Biểu đồ doanh thu của sách theo thể loại',
+                position: 'bottom',
+                font: {
+                    size: 30
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
     }
-
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
-}
+});
