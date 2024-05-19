@@ -9,11 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.BookSaleProject.Model.Entity.Bill;
 import com.example.BookSaleProject.Model.Entity.BillProBox;
+import com.example.BookSaleProject.Model.Entity.Book;
 import com.example.BookSaleProject.Model.Entity.BookType;
 import com.example.BookSaleProject.Model.Entity.Rate;
 import com.example.BookSaleProject.Model.Entity.User;
@@ -64,16 +66,14 @@ public class AdminController {
                 totalBill++;
                 for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
                     totalSaledBook += billProBox.getSL();
-                    int currentSL = 0;
                     String bookType = billProBox.getBook().getBookType().getName();
-                    if (hBookType.get(bookType) != 0) {
-                        currentSL = hBookType.get(bookType);
+                    if (bill.getStatus().equals("Đã thanh toán")) {
+                        hBookType.put(bookType, hBookType.get(bookType) + billProBox.getSL());
                     }
-                    hBookType.put(billProBox.getBook().getBookType().getName(), currentSL + billProBox.getSL());
+                    
                 }
             }
         }
-
         model.addAttribute(("bookTypeChart"), hBookType);
         model.addAttribute("bookList", bookService.getAll());
         model.addAttribute("totalAccount", totalAccount);
@@ -84,7 +84,8 @@ public class AdminController {
     }
 
     @PostMapping(value = "/addBook")
-    public ResponseEntity<String> addBook(@RequestParam("name") String name) {
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<String> addBook(@RequestBody Book book,@RequestParam("booktype") int idBookType) {
+        book.setBookType(bookTypeService.getByID(idBookType));
+        return ResponseEntity.ok().body("Success");
     }
 }
