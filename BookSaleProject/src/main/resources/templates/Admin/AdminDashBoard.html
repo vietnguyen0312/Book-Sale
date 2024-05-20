@@ -13,31 +13,19 @@
 
 <body>
 
-    <header>
-
-        <a class="logosec" style="cursor: pointer;">
-            <div class="logo">Book-Sale</div>
-        </a>
-
-        <div class="message">
-            <div class="circle"></div>
-            <div class="dp">
-            </div>
-        </div>
-
-    </header>
+    <header th:insert="~{admin/header :: header}"></header>
 
     <div class="main-container">
         <div class="navcontainer">
             <nav class="nav">
                 <div class="nav-upper-options">
                     <div class="nav-option option1">
-                        <h3> Dashboard</h3>
+                        <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;"> Dashboard</p>
                     </div>
 
                     <form th:action="@{/user/logout}">
                         <button type="submit" class="nav-option logout" style="border: none;">
-                            <h3>Logout</h3>
+                            <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">Logout</p>
                         </button>
                     </form>
                 </div>
@@ -126,16 +114,18 @@
                 <div class="report-header">
                     <h1 class="recent-Articles">Sản phẩm trong cửa hàng</h1>
                     <div class="search-container">
-                        <input type="text" name="" id="search-input" placeholder="Search">
+                        <input type="text" id="search-input" placeholder="Search">
                         <button class="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
-                    <form th:action="@{/admin/toAddBook}" method="get"><button class="view">Add Book</button></form>
-
+                    <form th:action="@{/admin/toAddBook}" method="get">
+                        <button class="view">Add Book</button>
+                    </form>
                 </div>
                 <div class="report-body">
                     <table class="report-table">
                         <thead>
                             <tr>
+                                <th>STT</th>
                                 <th>Tên</th>
                                 <th>Thể loại</th>
                                 <th>Tác giả</th>
@@ -144,13 +134,14 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr th:each="book : ${bookList}">
-                                <td th:text="${book.name}" id="name"></td>
-                                <td th:text="${book.bookType.name}" id="bookType"></td>
-                                <td th:text="${book.author}" id="author"></td>
-                                <td th:text="${book.price} + ' đ'" id="price"></td>
-                                <td th:text="${book.SL}" id="SL"></td>
+                        <tbody id="book-table-body">
+                            <tr th:each="book , status : ${bookList}">
+                                <td th:text="${status.index + 1}"></td>
+                                <td th:text="${book.name}"></td>
+                                <td th:text="${book.bookType.name}"></td>
+                                <td th:text="${book.author}"></td>
+                                <td th:text="${book.price} + ' đ'"></td>
+                                <td th:text="${book.SL}"></td>
                                 <td>
                                     <button class="action-btn edit-btn" style="color: black;"
                                         onmouseover="this.style.color='white'; this.style.textDecoration='underline'"
@@ -160,6 +151,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
 
 

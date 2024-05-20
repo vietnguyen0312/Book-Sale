@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body th:fragment="header">
+    <a th:href="@{/admin/}" class="logosec" style="cursor: pointer;">
+        <div class="logo">Book-Sale</div>
+    </a>
+
+    <div class="message">
+        <div class="circle" th:text="${session.userName}"></div>
+        <div class="dp"><i class="fa-regular fa-user" style="color: white;"></i></div>
+    </div>
+</body>
+
+</html>90

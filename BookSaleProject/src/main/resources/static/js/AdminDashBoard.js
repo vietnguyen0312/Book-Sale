@@ -1,7 +1,22 @@
+var timeout;
+var originalBookList = []; // This will hold the original book list
+
+// Function to fetch and store the original book list
+function fetchOriginalBookList() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/admin/recomendation?keyword=", true); // Assuming this endpoint returns all books when keyword is empty
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            originalBookList = JSON.parse(xhr.responseText);
+        }
+    };
+    xhr.send();
+}
+
 function handleInput() {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-        var keyword = document.getElementById("keyword").value.trim();
+        var keyword = document.getElementById("search-input").value.trim();
         var encodedKeyword = encodeURIComponent(keyword);
         if (encodedKeyword.length >= 1) {
             var url = "/admin/recomendation?keyword=" + encodedKeyword;
@@ -9,31 +24,74 @@ function handleInput() {
             xhr.open("GET", url, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    var suggestions = JSON.parse(xhr.responseText);
-                    // nhảy vào hàm hoặc in dữ liệu suggestion vào table
+                    var result = JSON.parse(xhr.responseText);
+                    displaySearchResults(result);
                 }
             };
             xhr.send();
+        } else {
+            resetTable();
         }
-        // Kiểm tra xem keyword có rỗng không sau khi nhận kết quả từ server
-        if (keyword === "") {
-            var suggestionsDiv = document.getElementById("suggestionBox");
-            suggestionsDiv.style.display = "none"; // Ẩn các gợi ý khi không có ký tự nào trong ô input
-        }
-    }, 500)
+    }, 500);
 }
 
-function displaySearchResults(results) {
-    // Xử lý và hiển thị kết quả tìm kiếm trong bảng HTML, ví dụ:
-    var tableBody = document.getElementById("search-results-body");
-    tableBody.innerHTML = ""; // Xóa bất kỳ dữ liệu cũ nào trong bảng
-    results.forEach(book => {
-        var row = tableBody.insertRow();
-        var nameCell = row.insertCell(0);
-        var authorCell = row.insertCell(1);
-        // Thêm các ô dữ liệu khác cần thiết ở đây
+function displaySearchResults(result) {
+    var tableBody = document.getElementById("book-table-body");
+    tableBody.innerHTML = ""; // Clear previous table rows
+
+    result.forEach((book, index) => {
+        var row = document.createElement("tr");
+
+        var indexCell = document.createElement("td");
+        indexCell.textContent = index + 1; // Index starts from 1
+        row.appendChild(indexCell);
+
+        var nameCell = document.createElement("td");
         nameCell.textContent = book.name;
+        row.appendChild(nameCell);
+
+        var bookTypeCell = document.createElement("td");
+        bookTypeCell.textContent = book.bookType.name;
+        row.appendChild(bookTypeCell);
+
+        var authorCell = document.createElement("td");
         authorCell.textContent = book.author;
-        // Thêm các ô dữ liệu khác cần thiết ở đây
+        row.appendChild(authorCell);
+
+        var priceCell = document.createElement("td");
+        priceCell.textContent = book.price + " đ";
+        row.appendChild(priceCell);
+
+        var slCell = document.createElement("td");
+        slCell.textContent = "" + book.sl;
+        row.appendChild(slCell);
+
+        var actionCell = document.createElement("td");
+        var editButton = document.createElement("button");
+        editButton.className = "action-btn edit-btn";
+        editButton.style.color = "black";
+        editButton.textContent = "Sửa";
+        editButton.onmouseover = function () {
+            this.style.color = 'white';
+            this.style.textDecoration = 'underline';
+        };
+        editButton.onmouseout = function () {
+            this.style.color = 'black';
+            this.style.textDecoration = 'none';
+        };
+        actionCell.appendChild(editButton);
+        row.appendChild(actionCell);
+
+        tableBody.appendChild(row);
     });
 }
+
+function resetTable() {
+    displaySearchResults(originalBookList);
+}
+
+// Fetch the original book list when the page loads
+document.addEventListener("DOMContentLoaded", fetchOriginalBookList);
+
+// Call handleInput function when input changes
+document.getElementById("search-input").addEventListener("input", handleInput);
