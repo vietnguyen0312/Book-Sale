@@ -9,4 +9,5 @@ public interface IBookTypeService {
     public BookType getByID(int id);
     public boolean addNew(BookType bookType);
     public boolean update(BookType bookType);
+    public BookType getByName(String name);
 }

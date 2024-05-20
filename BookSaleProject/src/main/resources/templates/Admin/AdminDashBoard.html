@@ -5,33 +5,46 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, 
-		initial-scale=1.0">
+				initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/AdminDashBoard.css}">
 </head>
 
 <body>
-    <header th:insert="~{admin/header :: header}"></header>
+
+    <header>
+
+        <a class="logosec" style="cursor: pointer;">
+            <div class="logo">Book-Sale</div>
+        </a>
+
+        <div class="message">
+            <div class="circle"></div>
+            <div class="dp">
+            </div>
+        </div>
+
+    </header>
 
     <div class="main-container">
-        <div class="main">
-            <div class="navcontainer">
-                <nav class="nav">
-                    <div class="nav-upper-options">
-                        <div class="nav-option option1">
-                            <h3> Dashboard</h3>
-                        </div>
-
-                        <form th:action="@{/user/logout}">
-                            <button type="submit" class="nav-option logout">
-                                <h3>Logout</h3>
-                            </button>
-                        </form>
+        <div class="navcontainer">
+            <nav class="nav">
+                <div class="nav-upper-options">
+                    <div class="nav-option option1">
+                        <h3> Dashboard</h3>
                     </div>
-                </nav>
-            </div>
+
+                    <form th:action="@{/user/logout}">
+                        <button type="submit" class="nav-option logout" style="border: none;">
+                            <h3>Logout</h3>
+                        </button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+        <div class="main">
+
             <div class="box-container">
 
                 <div class="box box1">
@@ -70,44 +83,44 @@
             <div class="report-container">
                 <div style="display: inline-flex;height: 100%;width: 100%;">
                     <canvas id="myChart"></canvas>
-                </div>
 
-                <script th:inline="javascript">
-                    let bookTypeChart = /*[[${bookTypeChart}]]*/ {};
-                    let labels = Object.keys(bookTypeChart);
-                    let data = Object.values(bookTypeChart);
-                    console.table(labels); console.table(data);
+                    <script th:inline="javascript">
+                        let bookTypeChart = /*[[${bookTypeChart}]]*/ {};
+                        let labels = Object.keys(bookTypeChart);
+                        let data = Object.values(bookTypeChart);
+                        console.table(labels); console.table(data);
 
-                    const ctx = document.getElementById('myChart');
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Số lượng sách bán được',
-                                data: data,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    text: 'Biểu đồ doanh thu của sách theo thể loại',
-                                    position: 'bottom',
-                                    font: {
-                                        size: 30
+                        const ctx = document.getElementById('myChart');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Số lượng sách bán được',
+                                    data: data,
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                    title: {
+                                        display: true,
+                                        text: 'Biểu đồ doanh thu của sách theo thể loại',
+                                        position: 'bottom',
+                                        font: {
+                                            size: 30
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
                                     }
                                 }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
                             }
-                        }
-                    });
-                </script>
+                        });
+                    </script>
+                </div>
                 <br>
                 <hr>
                 <div class="report-header">
@@ -116,7 +129,7 @@
                         <input type="text" name="" id="search-input" placeholder="Search">
                         <button class="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
-                    <button class="view">Add Book</button>
+                    <form th:action="@{/admin/toAddBook}" method="get"><button class="view">Add Book</button></form>
 
                 </div>
                 <div class="report-body">
@@ -133,11 +146,11 @@
                         </thead>
                         <tbody>
                             <tr th:each="book : ${bookList}">
-                                <td th:text="${book.name}"></td>
-                                <td th:text="${book.bookType.name}"></td>
-                                <td th:text="${book.author}"></td>
-                                <td th:text="${book.price} + ' đ'"></td>
-                                <td th:text="${book.SL}"></td>
+                                <td th:text="${book.name}" id="name"></td>
+                                <td th:text="${book.bookType.name}" id="bookType"></td>
+                                <td th:text="${book.author}" id="author"></td>
+                                <td th:text="${book.price} + ' đ'" id="price"></td>
+                                <td th:text="${book.SL}" id="SL"></td>
                                 <td>
                                     <button class="action-btn edit-btn" style="color: black;"
                                         onmouseover="this.style.color='white'; this.style.textDecoration='underline'"
@@ -153,7 +166,6 @@
         </div>
     </div>
 
-    <script th:src="@{/js/BillView.js}"></script>
     <script th:src="@{/js/AdminDashBoard.js}"></script>
 
 </body>

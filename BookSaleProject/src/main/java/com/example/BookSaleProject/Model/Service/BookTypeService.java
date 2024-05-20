@@ -28,10 +28,10 @@ public class BookTypeService implements IBookTypeService {
     @Override
     public BookType getByID(int id) {
         getAll();
-        for(BookType bookType:bookTypeList){
-            if(bookType.getId()==id)
+        for (BookType bookType : bookTypeList) {
+            if (bookType.getId() == id)
                 return bookTypeRepository.getByID(id);
-            }
+        }
         return null;
     }
 
@@ -50,5 +50,15 @@ public class BookTypeService implements IBookTypeService {
         }
         return false;
     }
-    
+
+    @Override
+    public BookType getByName(String name) {
+        getAll();
+        for (BookType bookType : bookTypeList) {
+            if (bookType.getName().equals(name))
+                return bookTypeRepository.getByName(name);
+        }
+        return null;
+    }
+
 }

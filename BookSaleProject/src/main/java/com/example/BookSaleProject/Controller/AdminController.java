@@ -1,17 +1,23 @@
 package com.example.BookSaleProject.Controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.BookSaleProject.Model.Entity.Bill;
 import com.example.BookSaleProject.Model.Entity.BillProBox;
@@ -29,6 +35,9 @@ import com.example.BookSaleProject.Model.Service.UserService;
 @Controller
 @RequestMapping({ "/admin" })
 public class AdminController {
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Autowired
     UserService userService = new UserService();
@@ -70,7 +79,7 @@ public class AdminController {
                     if (bill.getStatus().equals("Đã thanh toán")) {
                         hBookType.put(bookType, hBookType.get(bookType) + billProBox.getSL());
                     }
-                    
+
                 }
             }
         }
@@ -83,9 +92,40 @@ public class AdminController {
         return "Admin/AdminDashBoard";
     }
 
-    @PostMapping(value = "/addBook")
-    public ResponseEntity<String> addBook(@RequestBody Book book,@RequestParam("booktype") int idBookType) {
-        book.setBookType(bookTypeService.getByID(idBookType));
-        return ResponseEntity.ok().body("Success");
+    @GetMapping(value = "/toAddBook")
+    public String showAddBook(Model model) {
+        Book book = new Book();
+        model.addAttribute("book", book);
+        model.addAttribute("bookTypeList", bookTypeService.getAll());
+        return "Admin/AddBook";
+    }
+
+    @PostMapping("/addBook")
+    public String addBook(Model model, @ModelAttribute("book") Book book, @RequestParam("image") MultipartFile file,
+            @RequestParam("nameBookType") String nameBookType) throws IOException {
+
+        // Save image file
+        if (!file.isEmpty()) {
+            Path fileNameAndPath = Paths.get(uploadPath, file.getOriginalFilename());
+            Files.write(fileNameAndPath, file.getBytes());
+            book.setImg(file.getOriginalFilename());
+        }
+
+        // Set book type
+        BookType bookType = bookTypeService.getByName(nameBookType);
+        if (bookType != null) {
+            book.setBookType(bookType);
+        }
+
+        // Save book
+        bookService.addNew(book);
+
+        return index(model);
+    }
+
+    @GetMapping(value = "/recomendation")
+    public ResponseEntity<ArrayList<Book>> recomendationBook(@RequestParam("keyword") String keyword) {
+        ArrayList<Book> searchResult = bookService.search(keyword);
+        return ResponseEntity.ok().body(searchResult);
     }
 }
