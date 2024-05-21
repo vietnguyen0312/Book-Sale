@@ -55,6 +55,17 @@ public class BillController {
         total = 0;
         HttpSession session = request.getSession();
         user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+
+        for (CartProBox cartProBox : cartProBoxService.getAll()) {
+            if (cartProBox.getCart().getUser().equals(user)&&cartProBox.getSL() > cartProBox.getBook().getSL()) {
+                model.addAttribute("message", "Số lượng trong kho không đủ");
+                if (cartProBox.getBook().getSL()==0) {
+                    cartProBoxService.delete(cartProBox.getId());
+                }
+                return "redirect:/cart/viewCart";
+            }
+        }
+
         bill = new Bill(0, user, LocalDateTime.now().withNano(0), "Chưa thanh toán");
         billService.addNew(bill);
         bill = billService.getAll().get(billService.getAll().size() - 1);

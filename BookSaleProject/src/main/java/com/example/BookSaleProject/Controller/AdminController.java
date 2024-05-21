@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,9 @@ public class AdminController {
 
     @Value("${upload.path}")
     private String uploadPath;
+
+    @Value("${liveUpload.path}")
+    private String liveUploadPath;
 
     @Autowired
     UserService userService = new UserService();
@@ -107,7 +111,9 @@ public class AdminController {
         // Save image file
         if (!file.isEmpty()) {
             Path fileNameAndPath = Paths.get(uploadPath, file.getOriginalFilename());
+            Path liveFileNameAndPath = Paths.get(liveUploadPath, file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
+            Files.write(liveFileNameAndPath, file.getBytes());
             book.setImg(file.getOriginalFilename());
         }
 
@@ -127,5 +133,19 @@ public class AdminController {
     public ResponseEntity<ArrayList<Book>> recomendationBook(@RequestParam("keyword") String keyword) {
         ArrayList<Book> searchResult = bookService.search(keyword);
         return ResponseEntity.ok().body(searchResult);
+    }
+
+    @GetMapping(value = "/toUpdate/{id}")
+    public String toUpdate(Model model, @PathVariable("id") String id) {
+        Book book = bookService.getByID(Integer.parseInt(id));
+        model.addAttribute("book", book);
+        return "Update";
+    }
+
+    @PostMapping(value = "/update")
+    public String update(Model model, @ModelAttribute("book") Book book, @RequestParam("image") MultipartFile file) {
+        
+        bookService.update(book);
+        return index(model);
     }
 }

@@ -31,6 +31,11 @@
 <body>
     <header th:insert="~{header :: header}"></header>
     <br>
+    <div th:if="${message} != null">
+        <script type="text/javascript">
+            alert(/*[[${message}]]*/);
+        </script>
+    </div>
     <div class="small-background"
         style="background-image: url('/images/background1.jpg');padding-top: 20px;
         background-attachment: fixed;background-position: center;background-repeat: no-repeat;background-size: cover;position: relative;height: 300px;">

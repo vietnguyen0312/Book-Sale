@@ -143,9 +143,11 @@
                                 <td th:text="${book.price} + ' đ'"></td>
                                 <td th:text="${book.SL}"></td>
                                 <td>
-                                    <button class="action-btn edit-btn" style="color: black;"
-                                        onmouseover="this.style.color='white'; this.style.textDecoration='underline'"
-                                        onmouseout="this.style.color='black'; this.style.textDecoration='none'">Sửa</button>
+                                    <form th:action="@{/admin/toUpdate/__${book.id}__}" method="get">
+                                        <button class="action-btn edit-btn" style="color: black;"
+                                            onmouseover="this.style.color='white'; this.style.textDecoration='underline'"
+                                            onmouseout="this.style.color='black'; this.style.textDecoration='none'">Sửa</button>
+                                    </form>
                                 </td>
                             </tr>
                         </tbody>
