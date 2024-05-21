@@ -53,7 +53,7 @@ public class AdminController {
 
     @GetMapping("/")
     public String index(Model model) {
-        int totalAccount = 0, totalSaledBook = 0, totalBill = 0, totalComment;
+        int totalBook = 0, totalSaledBook = 0, totalBill = 0, totalComment;
         ArrayList<Rate> ratingAll = rateService.getAll();
 
         if (ratingAll == null) {
@@ -61,11 +61,9 @@ public class AdminController {
         } else
             totalComment = ratingAll.size();
 
-        if (userService.getAllUser() != null) {
-            for (User user : userService.getAllUser()) {
-                if (!user.getRole().equals("ADMIN")) {
-                    totalAccount++;
-                }
+        if (bookService.getAll() != null) {
+            for (Book book : bookService.getAll()) {
+                totalBook += book.getSL();
             }
         }
 
@@ -89,11 +87,28 @@ public class AdminController {
         }
         model.addAttribute(("bookTypeChart"), hBookType);
         model.addAttribute("bookList", bookService.getAll());
-        model.addAttribute("totalAccount", totalAccount);
+        model.addAttribute("totalBook", totalBook);
         model.addAttribute("totalSaledBook", totalSaledBook);
         model.addAttribute("totalBill", totalBill);
         model.addAttribute("totalComment", totalComment);
-        return "Admin/AdminDashBoard";
+        return "Admin/BookManage";
+    }
+
+    @GetMapping(value = "/userManage")
+    public String userManage(Model model) {
+        int totalUserAccount = 0, totalAdminAccount = 0;
+        if (userService.getAllUser() != null) {
+            for (User user : userService.getAllUser()) {
+                if (!user.getRole().equals("ADMIN")) {
+                    totalUserAccount++;
+                } else {
+                    totalAdminAccount++;
+                }
+            }
+        }
+        model.addAttribute("totalUserAccount", totalUserAccount);
+        model.addAttribute("totalAdminAccount", totalAdminAccount);
+        return "Admin/UserManage";
     }
 
     @GetMapping(value = "/toAddBook")
@@ -132,20 +147,56 @@ public class AdminController {
     @GetMapping(value = "/recomendation")
     public ResponseEntity<ArrayList<Book>> recomendationBook(@RequestParam("keyword") String keyword) {
         ArrayList<Book> searchResult = bookService.search(keyword);
+
         return ResponseEntity.ok().body(searchResult);
     }
 
     @GetMapping(value = "/toUpdate/{id}")
     public String toUpdate(Model model, @PathVariable("id") String id) {
         Book book = bookService.getByID(Integer.parseInt(id));
+        model.addAttribute("uploadPath", uploadPath);
         model.addAttribute("book", book);
-        return "Update";
+        model.addAttribute("bookTypeList", bookTypeService.getAll());
+        return "Admin/Update";
     }
 
     @PostMapping(value = "/update")
-    public String update(Model model, @ModelAttribute("book") Book book, @RequestParam("image") MultipartFile file) {
-        
+    public String update(Model model, @ModelAttribute("book") Book book, @RequestParam("image") MultipartFile file,
+            @RequestParam("nameBookType") String nameBookType) throws IOException {
+
+        Book existingBook = bookService.getByID(book.getId());
+
+        if (!file.isEmpty()) {
+            // Delete the old image file if it exists
+            if (existingBook.getImg() != null && !existingBook.getImg().isEmpty()) {
+                Path oldFilePath = Paths.get(uploadPath, existingBook.getImg());
+                Path oldLiveFilePath = Paths.get(liveUploadPath, existingBook.getImg());
+                Files.deleteIfExists(oldFilePath);
+                Files.deleteIfExists(oldLiveFilePath);
+            }
+
+            // Save the new image file
+            Path fileNameAndPath = Paths.get(uploadPath, file.getOriginalFilename());
+            Path liveFileNameAndPath = Paths.get(liveUploadPath, file.getOriginalFilename());
+            Files.write(fileNameAndPath, file.getBytes());
+            Files.write(liveFileNameAndPath, file.getBytes());
+            book.setImg(file.getOriginalFilename());
+        } else {
+            // Retain the existing image if no new file is uploaded
+            book.setImg(existingBook.getImg());
+        }
+
+        // Set the book type based on the selected value
+        book.setBookType(bookTypeService.getByName(nameBookType));
+
+        // Update the book details
         bookService.update(book);
+
+        // Add the updated book to the model
+        model.addAttribute("book", book);
+
+        // Redirect to the index or another appropriate view
         return index(model);
     }
+
 }

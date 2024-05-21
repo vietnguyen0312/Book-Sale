@@ -16,10 +16,10 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebFilter("/*")
 public class RoleFilter implements Filter {
 
-    private static final List<String> EXCLUDED_PATHS = Arrays.asList("/user/", "/book/", "/client/",
-        "/css/", "/images/", "/js/");
+    private static final List<String> EXCLUDED_PATHS = Arrays.asList("/user", "/book", "/client",
+        "/css", "/images", "/js");
 
-    private static final List<String> USER_PATHS = Arrays.asList("/cart/", "/bill/");
+    private static final List<String> USER_PATHS = Arrays.asList("/cart", "/bill");
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

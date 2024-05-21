@@ -87,14 +87,17 @@
                                             <label class="form-label" for="date">Năm xuất bản</label>
                                         </div>
                                         <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="text" id="detail" class="form-control form-control-lg"
-                                                th:field="*{detail}" />
+                                            <textarea id="detail" class="form-control form-control-lg"
+                                                th:field="*{detail}" style="height: 171px;"></textarea>
                                             <label class="form-label" for="detail">Nội dung</label>
                                         </div>
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="file" id="image" class="form-control form-control-lg"
-                                                name="image" />
+                                                name="image" onchange="showImagePreview(event)" />
                                             <label class="form-label" for="image">Ảnh</label>
+                                            <div id="imagePreview">
+                                                <img/>
+                                            </div>
                                         </div>
                                         <div class="d-flex justify-content-center">
                                             <button type="submit" data-mdb-button-init data-mdb-ripple-init
@@ -111,12 +114,27 @@
                                                 }
                                             }
 
+                                            var textarea = document.getElementById("detail");
+                                            if (textarea.value.trim() === "") {
+                                                alert("Vui lòng điền đầy đủ thông tin.");
+                                                return false;
+                                            }
+
                                             var select = document.getElementById("bookType");
                                             if (select.value === "") {
                                                 alert("Vui lòng chọn thể loại.");
                                                 return false;
                                             }
                                             return true;
+                                        }
+
+                                        function showImagePreview(event) {
+                                            var reader = new FileReader();
+                                            reader.onload = function () {
+                                                var output = document.getElementById('imagePreview');
+                                                output.innerHTML = '<img src="' + reader.result + '" alt="Image Preview" width="100%" height="300px"/>';
+                                            };
+                                            reader.readAsDataURL(event.target.files[0]);
                                         }
                                     </script>
                                 </div>

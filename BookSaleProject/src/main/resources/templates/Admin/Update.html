@@ -37,78 +37,94 @@
                         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                             <div class="card" style="border-radius: 15px;">
                                 <div class="card-body p-5">
-                                    <h2 class="text-uppercase text-center mb-5">ADD NEW BOOK</h2>
+                                    <h2 class="text-uppercase text-center mb-5">UPDATE BOOK</h2>
 
                                     <form th:action="@{/admin/update}" th:method="post" th:object="${book}"
                                         enctype="multipart/form-data" onsubmit="return validateForm()">
 
+                                        <input type="hidden" th:value="${book.id}" th:field="*{id}">
+
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="name" class="form-control form-control-lg"
-                                                th:field="*{name}" />
+                                                th:field="*{name}" th:value="${book.name}" />
                                             <label class="form-label" for="name">Tên</label>
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <select id="bookType" class="form-control form-control-lg"
                                                 name="nameBookType">
-                                                <option value="">Chọn thể loại</option>
                                                 <option th:each="bookType : ${bookTypeList}" th:value="${bookType.name}"
+                                                    th:selected="${bookType.name == book.bookType.name}"
                                                     th:text="${bookType.name}"></option>
                                             </select>
                                             <label class="form-label" for="bookType">Thể loại</label>
                                         </div>
 
+
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="author" class="form-control form-control-lg"
-                                                name="author" th:field="*{author}" />
+                                                name="author" th:field="*{author}" th:value="${book.author}" />
                                             <label class="form-label" for="location">Tác giả</label>
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="price" class="form-control form-control-lg"
-                                                th:field="*{price}" />
+                                                th:field="*{price}" th:value="${book.price}" />
                                             <label class="form-label" for="price">Đơn giá</label>
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="SL" class="form-control form-control-lg"
-                                                th:field="*{SL}" />
+                                                th:field="*{SL}" th:value="${book.SL}" />
                                             <label class="form-label" for="SL">Số lượng</label>
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="nxb" class="form-control form-control-lg"
-                                                th:field="*{nxb}" />
+                                                th:field="*{nxb}" th:value="${book.nxb}" />
                                             <label class="form-label" for="nxb">Nhà xuất bản</label>
                                         </div>
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="date" class="form-control form-control-lg"
-                                                th:field="*{date}" />
+                                                th:field="*{date}" th:value="${book.date}" />
                                             <label class="form-label" for="date">Năm xuất bản</label>
                                         </div>
                                         <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="text" id="detail" class="form-control form-control-lg"
-                                                th:field="*{detail}" />
+                                            <textarea id="detail" class="form-control form-control-lg"
+                                                th:field="*{detail}" th:value="${book.detail}"
+                                                style="height: 171px;"></textarea>
                                             <label class="form-label" for="detail">Nội dung</label>
                                         </div>
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="file" id="image" class="form-control form-control-lg"
-                                                name="image" />
+                                                name="image" onchange="showImagePreview(event)" />
                                             <label class="form-label" for="image">Ảnh</label>
+                                            <div id="imagePreview">
+                                                <img th:src="@{@{'/images/'+${book.img}}}" width="100%"
+                                                    height="300px" />
+                                            </div>
                                         </div>
                                         <div class="d-flex justify-content-center">
-                                            <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Update</button>
+                                            <button id="updateButton" type="submit" data-mdb-button-init
+                                                data-mdb-ripple-init
+                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
+                                                disabled>Update</button>
                                         </div>
                                     </form>
                                     <script>
                                         function validateForm() {
-                                            var inputs = document.querySelectorAll("input[type='text'], input[type='file']");
+                                            var inputs = document.querySelectorAll("input[type='text']");
                                             for (var i = 0; i < inputs.length; i++) {
                                                 if (inputs[i].value.trim() === "") {
                                                     alert("Vui lòng điền đầy đủ thông tin.");
                                                     return false;
                                                 }
+                                            }
+
+                                            var textarea = document.getElementById("detail");
+                                            if (textarea.value.trim() === "") {
+                                                alert("Vui lòng điền đầy đủ thông tin.");
+                                                return false;
                                             }
 
                                             var select = document.getElementById("bookType");
@@ -117,6 +133,31 @@
                                                 return false;
                                             }
                                             return true;
+                                        }
+
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            var inputs = document.querySelectorAll("input[type='text'], input[type='file']");
+                                            var select = document.getElementById("bookType");
+                                            var updateButton = document.getElementById("updateButton");
+
+                                            function enableUpdateButton() {
+                                                updateButton.disabled = false;
+                                            }
+
+                                            inputs.forEach(function (input) {
+                                                input.addEventListener('input', enableUpdateButton);
+                                            });
+
+                                            select.addEventListener('change', enableUpdateButton);
+                                        });
+
+                                        function showImagePreview(event) {
+                                            var reader = new FileReader();
+                                            reader.onload = function () {
+                                                var output = document.getElementById('imagePreview');
+                                                output.innerHTML = '<img src="' + reader.result + '" alt="Image Preview" width="100%" height="300px"/>';
+                                            };
+                                            reader.readAsDataURL(event.target.files[0]);
                                         }
                                     </script>
                                 </div>

@@ -20,8 +20,17 @@
             <nav class="nav">
                 <div class="nav-upper-options">
                     <div class="nav-option option1">
-                        <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;"> Dashboard</p>
+                        <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">Book Manage</p>
                     </div>
+
+                    <form th:action="@{/admin/userManage}">
+                        <button type="submit" style="border: none;">
+                            <div class="nav-option option2">
+                                <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">User Manage</p>
+                            </div>
+                        </button>
+                    </form>
+
 
                     <form th:action="@{/user/logout}">
                         <button type="submit" class="nav-option logout" style="border: none;">
@@ -37,10 +46,10 @@
 
                 <div class="box box1">
                     <div class="text">
-                        <p class="h2 topic-heading" th:text="${totalAccount}"></p>
-                        <p class="h2 topic">Số lượng tài khoản</p>
+                        <p class="h2 topic-heading" th:text="${totalBook}"></p>
+                        <p class="h2 topic">Số lượng sách</p>
                     </div>
-                    <i class="fa-solid fa-user"></i>
+                    <i class="fa-solid fa-book"></i>
                 </div>
 
                 <div class="box box2">
@@ -48,7 +57,7 @@
                         <p class="h2 topic-heading" th:text="${totalSaledBook}"></p>
                         <p class="h2 topic">Số lượng bán</p>
                     </div>
-                    <i class="fa-solid fa-book"></i>
+                    <i class="fa-brands fa-sellsy"></i>
                 </div>
 
                 <div class="box box3">
