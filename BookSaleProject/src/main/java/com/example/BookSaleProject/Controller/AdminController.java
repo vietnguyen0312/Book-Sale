@@ -5,7 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
 
 import com.example.BookSaleProject.Model.Entity.Bill;
 import com.example.BookSaleProject.Model.Entity.BillProBox;
@@ -30,6 +36,7 @@ import com.example.BookSaleProject.Model.Service.BillProBoxService;
 import com.example.BookSaleProject.Model.Service.BillService;
 import com.example.BookSaleProject.Model.Service.BookService;
 import com.example.BookSaleProject.Model.Service.BookTypeService;
+import com.example.BookSaleProject.Model.Service.FeedbackService;
 import com.example.BookSaleProject.Model.Service.RateService;
 import com.example.BookSaleProject.Model.Service.UserService;
 
@@ -50,6 +57,7 @@ public class AdminController {
     RateService rateService = new RateService();
     BookService bookService = new BookService();
     BookTypeService bookTypeService = new BookTypeService();
+    FeedbackService feedbackService = new FeedbackService();
 
     @GetMapping("/")
     public String index(Model model) {
@@ -94,23 +102,6 @@ public class AdminController {
         return "Admin/BookManage";
     }
 
-    @GetMapping(value = "/userManage")
-    public String userManage(Model model) {
-        int totalUserAccount = 0, totalAdminAccount = 0;
-        if (userService.getAllUser() != null) {
-            for (User user : userService.getAllUser()) {
-                if (!user.getRole().equals("ADMIN")) {
-                    totalUserAccount++;
-                } else {
-                    totalAdminAccount++;
-                }
-            }
-        }
-        model.addAttribute("totalUserAccount", totalUserAccount);
-        model.addAttribute("totalAdminAccount", totalAdminAccount);
-        return "Admin/UserManage";
-    }
-
     @GetMapping(value = "/toAddBook")
     public String showAddBook(Model model) {
         Book book = new Book();
@@ -147,7 +138,6 @@ public class AdminController {
     @GetMapping(value = "/recomendation")
     public ResponseEntity<ArrayList<Book>> recomendationBook(@RequestParam("keyword") String keyword) {
         ArrayList<Book> searchResult = bookService.search(keyword);
-
         return ResponseEntity.ok().body(searchResult);
     }
 
@@ -197,6 +187,81 @@ public class AdminController {
 
         // Redirect to the index or another appropriate view
         return index(model);
+    }
+
+    @GetMapping(value = "/userManage")
+    public String userManage(Model model) {
+        int totalUserAccount = 0, totalAdminAccount = 0;
+        if (userService.getAllUser() != null) {
+            for (User user : userService.getAllUser()) {
+                if (!user.getRole().equals("ADMIN")) {
+                    totalUserAccount++;
+                } else {
+                    totalAdminAccount++;
+                }
+            }
+        }
+        ArrayList<Bill> bills = billService.getAll();
+        int totalOrderMonth = 0, totalOrderYear = 0;
+        float[] turnoverByMonth = new float[12];
+
+        for (Bill bill : bills) {
+            float total = 0;
+            if (bill.getDate().getYear() == (LocalDateTime.now().getYear())) {
+                totalOrderYear++;
+                if (bill.getDate().getMonth().equals(LocalDateTime.now().getMonth())) {
+                    totalOrderMonth++;
+                }
+            }
+            if (bill.getStatus().equals("Đã thanh toán")) {
+                for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
+                    total += (billProBox.getSL() * billProBox.getBook().getPrice());
+                }
+                turnoverByMonth[bill.getDate().getMonth().getValue() - 1] += total;
+            }
+        }
+
+        HashMap<User, Float> topUser = new HashMap<>();
+
+        for (Bill bill : bills) {
+            if (bill.getDate().getMonth().equals(LocalDateTime.now().getMonth())
+                    && bill.getDate().getYear() == (LocalDateTime.now().getYear())
+                    && bill.getStatus().equals("Đã thanh toán")) {
+                float total = 0;
+                for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
+                    total += (billProBox.getSL() * billProBox.getBook().getPrice());
+                }
+                if (topUser.get(bill.getUser()) != null) {
+                    topUser.put(bill.getUser(), topUser.get(bill.getUser()) + total);
+                } else {
+                    topUser.put(bill.getUser(), total);
+                }
+            }
+        }
+
+        // Convert HashMap to a List of Map.Entry
+        List<Map.Entry<User, Float>> list = new LinkedList<>(topUser.entrySet());
+
+        // Sort the list based on values in descending order
+        Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
+
+        // Create a new HashMap to store the top 5 users
+        HashMap<User, Float> top5Users = new LinkedHashMap<>();
+        int count = 0;
+        for (Map.Entry<User, Float> entry : list) {
+            if (count >= 5) break; // Exit loop after 5 elements
+            top5Users.put(entry.getKey(), entry.getValue());
+            count++;
+        }
+        
+        model.addAttribute("feedbacks", feedbackService.getAll());
+        model.addAttribute("topUser", top5Users);
+        model.addAttribute("turnoverByMonth", turnoverByMonth);
+        model.addAttribute("totalOrderMonth", totalOrderMonth);
+        model.addAttribute("totalOrderYear", totalOrderYear);
+        model.addAttribute("totalUserAccount", totalUserAccount);
+        model.addAttribute("totalAdminAccount", totalAdminAccount);
+        return "Admin/IncomeManage";
     }
 
 }

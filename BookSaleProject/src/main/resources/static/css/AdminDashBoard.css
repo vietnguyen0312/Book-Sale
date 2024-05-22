@@ -421,3 +421,10 @@ header {
 .tab-content.active {
     display: block;
 }
+
+.report-table img {
+    width: 100px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Center the image */
+    margin: 0 auto;
+}

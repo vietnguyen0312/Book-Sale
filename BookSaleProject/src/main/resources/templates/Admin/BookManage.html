@@ -26,7 +26,7 @@
                     <form th:action="@{/admin/userManage}">
                         <button type="submit" style="border: none;">
                             <div class="nav-option option2">
-                                <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">User Manage</p>
+                                <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">In-come Manage</p>
                             </div>
                         </button>
                     </form>
@@ -78,48 +78,48 @@
             </div>
 
             <div class="report-container">
-                <div style="display: inline-flex;height: 100%;width: 100%;">
-                    <canvas id="myChart"></canvas>
+                    <div style="display: inline-flex;height: 100%;width: 100%;">
+                        <canvas id="myChart"></canvas>
 
-                    <script th:inline="javascript">
-                        let bookTypeChart = /*[[${bookTypeChart}]]*/ {};
-                        let labels = Object.keys(bookTypeChart);
-                        let data = Object.values(bookTypeChart);
-                        console.table(labels); console.table(data);
+                        <script th:inline="javascript">
+                            let bookTypeChart = /*[[${bookTypeChart}]]*/ {};
+                            let labels = Object.keys(bookTypeChart);
+                            let data = Object.values(bookTypeChart);
 
-                        const ctx = document.getElementById('myChart');
-                        new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Số lượng sách bán được',
-                                    data: data,
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                plugins: {
-                                    title: {
-                                        display: true,
-                                        text: 'Biểu đồ doanh thu của sách theo thể loại',
-                                        position: 'bottom',
-                                        font: {
-                                            size: 30
+                            const ctx = document.getElementById('myChart');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Số lượng sách bán được',
+                                        data: data,
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: 'Biểu đồ doanh thu của sách theo thể loại',
+                                            position: 'bottom',
+                                            font: {
+                                                size: 30
+                                            }
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
                                         }
                                     }
-                                },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
                                 }
-                            }
-                        });
-                    </script>
+                            });
+                        </script>
                 </div>
-                <br>
-                <hr>
+            </div>
+
+            <div class="report-container">
                 <div class="report-header">
                     <h1 class="recent-Articles">Sản phẩm trong cửa hàng</h1>
                     <div class="search-container">
@@ -135,6 +135,7 @@
                         <thead>
                             <tr>
                                 <th>STT</th>
+                                <th>Minh hoạ</th>
                                 <th>Tên</th>
                                 <th>Thể loại</th>
                                 <th>Tác giả</th>
@@ -146,6 +147,7 @@
                         <tbody id="book-table-body">
                             <tr th:each="book , status : ${bookList}">
                                 <td th:text="${status.index + 1}"></td>
+                                <td><img th:src="|/images/${book.img}|"></td>
                                 <td th:text="${book.name}"></td>
                                 <td th:text="${book.bookType.name}"></td>
                                 <td th:text="${book.author}"></td>

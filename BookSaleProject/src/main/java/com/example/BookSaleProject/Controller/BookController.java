@@ -51,17 +51,6 @@ public class BookController {
     public String index(Model model) {
         ArrayList<Book> bookListAll = bookService.getAll();
         bookRate.clear();
-        bookListAll.sort(Comparator.comparing(Book::getDate).reversed());
-        ArrayList<Book> newBookList = new ArrayList<>();
-        for (Book book : bookListAll) {
-            newBookList.add(book);
-            if (newBookList.size() == 3) {
-                break;
-            }
-        }
-        for (Book book : newBookList) {
-            bookRate.put(book, rateService.getScoreByIdBook(book));
-        }
 
         HashMap<Book, Float> bookRateList = new HashMap<Book, Float>();
 
@@ -87,6 +76,19 @@ public class BookController {
                 bookRateList.remove(topBook);
             }
         }
+
+        bookListAll.sort(Comparator.comparing(Book::getDate).reversed());
+        ArrayList<Book> newBookList = new ArrayList<>();
+        for (Book book : bookListAll) {
+            newBookList.add(book);
+            if (newBookList.size() == 3) {
+                break;
+            }
+        }
+        for (Book book : newBookList) {
+            bookRate.put(book, rateService.getScoreByIdBook(book));
+        }
+        
         model.addAttribute("bookTypeList", bookTypeList);
         model.addAttribute("newBookList", bookRate);
         model.addAttribute("favouriteBookList", topRatedBooks);
@@ -243,11 +245,12 @@ public class BookController {
     }
 
     @PostMapping(value = "/rating")
-    public ResponseEntity<String> ratingBook(@RequestParam("idBook") String idBook,@RequestParam("comment") String comment
-    ,@RequestParam("score") String score, HttpServletRequest request) {
+    public ResponseEntity<String> ratingBook(@RequestParam("idBook") String idBook,
+            @RequestParam("comment") String comment, @RequestParam("score") String score, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
-        Rate rate = new Rate(0, user, bookService.getByID(Integer.parseInt(idBook)),Float.parseFloat(score), comment, LocalDateTime.now().withNano(0));
+        Rate rate = new Rate(0, user, bookService.getByID(Integer.parseInt(idBook)), Float.parseFloat(score), comment,
+                LocalDateTime.now().withNano(0));
         rateService.addNew(rate);
         return ResponseEntity.ok().body("Đánh giá thành công");
     }

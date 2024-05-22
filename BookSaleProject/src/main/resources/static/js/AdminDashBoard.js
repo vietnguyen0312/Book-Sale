@@ -46,6 +46,14 @@ function displaySearchResults(result) {
         indexCell.textContent = index + 1; // Index starts from 1
         row.appendChild(indexCell);
 
+        var imgCell = document.createElement("td");
+        var img = document.createElement("img");
+        img.src = "/images/" + book.img; // Adjust the path as necessary
+        img.style.width = "100px"; // Adjust the width as needed
+        img.style.height = "auto"; // Maintain aspect ratio
+        imgCell.appendChild(img);
+        row.appendChild(imgCell);
+
         var nameCell = document.createElement("td");
         nameCell.textContent = book.name;
         row.appendChild(nameCell);
@@ -63,7 +71,7 @@ function displaySearchResults(result) {
         row.appendChild(priceCell);
 
         var slCell = document.createElement("td");
-        slCell.textContent = "" + book.sl;
+        slCell.textContent = book.sl;
         row.appendChild(slCell);
 
         var actionCell = document.createElement("td");
