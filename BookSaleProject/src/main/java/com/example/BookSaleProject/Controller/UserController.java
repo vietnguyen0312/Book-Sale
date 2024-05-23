@@ -205,4 +205,33 @@ public class UserController {
     public String showError() {
         return "403";
     }
+
+    @PostMapping(value = "/updateUser")
+    public String updateUser(Model model, @ModelAttribute("user") User userUpdate, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        session.setAttribute("userName", userUpdate.getUsername());
+        user.setAddress(userUpdate.getAddress());
+        user.setUsername(userUpdate.getUsername());
+        userService.update(user);
+        return userInfo(model, request);
+    }
+
+    @PostMapping(value = "/changePassword")
+    public ResponseEntity<String> changePassword(@RequestParam("newPassword") String newPassword,
+            @RequestParam("currentPassword") String currentPassword,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        if (user.getPassword().equals(currentPassword)) {
+            if (userService.checkValidatePass(newPassword)) {
+                user.setPassword(newPassword);
+                userService.update(user);
+                return ResponseEntity.ok().body("Success");
+            }
+            return ResponseEntity.badRequest().body("Mật khẩu quá ngắn");
+        }
+        return ResponseEntity.badRequest().body("Mật khẩu hiện tại không chính xác");
+
+    }
 }
