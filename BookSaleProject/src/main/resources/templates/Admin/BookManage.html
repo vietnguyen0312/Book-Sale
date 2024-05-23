@@ -23,14 +23,21 @@
                         <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">Book Manage</p>
                     </div>
 
-                    <form th:action="@{/admin/userManage}">
+                    <form th:action="@{/admin/userManage}" method="get">
                         <button type="submit" style="border: none;">
                             <div class="nav-option option2">
-                                <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">In-come Manage</p>
+                                <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">User Manage</p>
                             </div>
                         </button>
                     </form>
 
+                    <form th:action="@{/admin/billManage}" method="get">
+                        <button type="submit" style="border: none;">
+                            <div class="nav-option option3">
+                                <p style="font-size: x-large;font-family: Arial, Helvetica, sans-serif;">Bill Manage</p>
+                            </div>
+                        </button>
+                    </form>
 
                     <form th:action="@{/user/logout}">
                         <button type="submit" class="nav-option logout" style="border: none;">
@@ -78,44 +85,44 @@
             </div>
 
             <div class="report-container">
-                    <div style="display: inline-flex;height: 100%;width: 100%;">
-                        <canvas id="myChart"></canvas>
+                <div style="display: inline-flex;height: 100%;width: 100%;">
+                    <canvas id="myChart"></canvas>
 
-                        <script th:inline="javascript">
-                            let bookTypeChart = /*[[${bookTypeChart}]]*/ {};
-                            let labels = Object.keys(bookTypeChart);
-                            let data = Object.values(bookTypeChart);
+                    <script th:inline="javascript">
+                        let bookTypeChart = /*[[${bookTypeChart}]]*/ {};
+                        let labels = Object.keys(bookTypeChart);
+                        let data = Object.values(bookTypeChart);
 
-                            const ctx = document.getElementById('myChart');
-                            new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: labels,
-                                    datasets: [{
-                                        label: 'Số lượng sách bán được',
-                                        data: data,
-                                        borderWidth: 1
-                                    }]
-                                },
-                                options: {
-                                    plugins: {
-                                        title: {
-                                            display: true,
-                                            text: 'Biểu đồ doanh thu của sách theo thể loại',
-                                            position: 'bottom',
-                                            font: {
-                                                size: 30
-                                            }
-                                        }
-                                    },
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
+                        const ctx = document.getElementById('myChart');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Số lượng sách bán được',
+                                    data: data,
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                    title: {
+                                        display: true,
+                                        text: 'Biểu đồ doanh thu của sách theo thể loại',
+                                        position: 'bottom',
+                                        font: {
+                                            size: 30
                                         }
                                     }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
                                 }
-                            });
-                        </script>
+                            }
+                        });
+                    </script>
                 </div>
             </div>
 
@@ -164,10 +171,7 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
-
-
         </div>
     </div>
 

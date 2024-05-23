@@ -295,6 +295,12 @@ header {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
+    overflow: hidden;
+    /* Đảm bảo rằng nội dung tràn sẽ bị ẩn */
+    white-space: nowrap;
+    /* Ngăn không cho văn bản xuống dòng */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ba chấm khi văn bản bị cắt */
 }
 
 .report-table th {
@@ -317,7 +323,8 @@ header {
     border-radius: 5px;
     cursor: pointer;
     margin: 0 2px;
-    color: black; /* Change text color to black */
+    color: black;
+    /* Change text color to black */
 }
 
 .edit-btn {
@@ -402,29 +409,38 @@ header {
     padding: 10px;
     border-bottom: 1px solid #ccc;
 }
+
 .nav-option.active {
     background-color: #f0f0f0;
 }
+
 .main-container {
     display: flex;
 }
+
 .navcontainer {
     width: 200px;
 }
+
 .main {
     flex: 1;
     padding: 20px;
 }
+
 .tab-content {
     display: none;
 }
+
 .tab-content.active {
     display: block;
 }
 
 .report-table img {
-    width: 100px; /* Adjust the width as needed */
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Center the image */
+    width: 100px;
+    /* Adjust the width as needed */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    /* Center the image */
     margin: 0 auto;
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -192,68 +193,73 @@ public class AdminController {
     @GetMapping(value = "/userManage")
     public String userManage(Model model) {
         int totalUserAccount = 0, totalAdminAccount = 0;
-        if (userService.getAllUser() != null) {
-            for (User user : userService.getAllUser()) {
-                if (!user.getRole().equals("ADMIN")) {
-                    totalUserAccount++;
-                } else {
+        ArrayList<User> users = userService.getAllUser();
+        if (users != null) {
+            for (User user : users) {
+                if (user.getRole().equals("ADMIN")) {
                     totalAdminAccount++;
+                } else {
+                    totalUserAccount++;
                 }
             }
         }
         ArrayList<Bill> bills = billService.getAll();
         int totalOrderMonth = 0, totalOrderYear = 0;
         float[] turnoverByMonth = new float[12];
-
-        for (Bill bill : bills) {
-            float total = 0;
-            if (bill.getDate().getYear() == (LocalDateTime.now().getYear())) {
-                totalOrderYear++;
-                if (bill.getDate().getMonth().equals(LocalDateTime.now().getMonth())) {
-                    totalOrderMonth++;
-                }
-            }
-            if (bill.getStatus().equals("Đã thanh toán")) {
-                for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
-                    total += (billProBox.getSL() * billProBox.getBook().getPrice());
-                }
-                turnoverByMonth[bill.getDate().getMonth().getValue() - 1] += total;
-            }
-        }
-
-        HashMap<User, Float> topUser = new HashMap<>();
-
-        for (Bill bill : bills) {
-            if (bill.getDate().getMonth().equals(LocalDateTime.now().getMonth())
-                    && bill.getDate().getYear() == (LocalDateTime.now().getYear())
-                    && bill.getStatus().equals("Đã thanh toán")) {
-                float total = 0;
-                for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
-                    total += (billProBox.getSL() * billProBox.getBook().getPrice());
-                }
-                if (topUser.get(bill.getUser()) != null) {
-                    topUser.put(bill.getUser(), topUser.get(bill.getUser()) + total);
-                } else {
-                    topUser.put(bill.getUser(), total);
-                }
-            }
-        }
-
-        // Convert HashMap to a List of Map.Entry
-        List<Map.Entry<User, Float>> list = new LinkedList<>(topUser.entrySet());
-
-        // Sort the list based on values in descending order
-        Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
-
         // Create a new HashMap to store the top 5 users
         HashMap<User, Float> top5Users = new LinkedHashMap<>();
-        int count = 0;
-        for (Map.Entry<User, Float> entry : list) {
-            if (count >= 5) break; // Exit loop after 5 elements
-            top5Users.put(entry.getKey(), entry.getValue());
-            count++;
+
+        if (bills != null) {
+            for (Bill bill : bills) {
+                float total = 0;
+                if (bill.getDate().getYear() == (LocalDateTime.now().getYear())) {
+                    totalOrderYear++;
+                    if (bill.getDate().getMonth().equals(LocalDateTime.now().getMonth())) {
+                        totalOrderMonth++;
+                    }
+                }
+                if (bill.getStatus().equals("Đã thanh toán")) {
+                    for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
+                        total += (billProBox.getSL() * billProBox.getBook().getPrice());
+                    }
+                    turnoverByMonth[bill.getDate().getMonth().getValue() - 1] += total;
+                }
+            }
+
+            HashMap<User, Float> topUser = new HashMap<>();
+
+            for (Bill bill : bills) {
+                if (bill.getDate().getMonth().equals(LocalDateTime.now().getMonth())
+                        && bill.getDate().getYear() == (LocalDateTime.now().getYear())
+                        && bill.getStatus().equals("Đã thanh toán")) {
+                    float total = 0;
+                    for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
+                        total += (billProBox.getSL() * billProBox.getBook().getPrice());
+                    }
+                    if (topUser.get(bill.getUser()) != null) {
+                        topUser.put(bill.getUser(), topUser.get(bill.getUser()) + total);
+                    } else {
+                        topUser.put(bill.getUser(), total);
+                    }
+                }
+            }
+
+            // Convert HashMap to a List of Map.Entry
+            List<Map.Entry<User, Float>> list = new LinkedList<>(topUser.entrySet());
+
+            // Sort the list based on values in descending order
+            Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
+
+            int count = 0;
+            for (Map.Entry<User, Float> entry : list) {
+                if (count >= 5)
+                    break; // Exit loop after 5 elements
+                top5Users.put(entry.getKey(), entry.getValue());
+                count++;
+            }
         }
-        
+
+        model.addAttribute("users", users);
         model.addAttribute("feedbacks", feedbackService.getAll());
         model.addAttribute("topUser", top5Users);
         model.addAttribute("turnoverByMonth", turnoverByMonth);
@@ -261,7 +267,43 @@ public class AdminController {
         model.addAttribute("totalOrderYear", totalOrderYear);
         model.addAttribute("totalUserAccount", totalUserAccount);
         model.addAttribute("totalAdminAccount", totalAdminAccount);
-        return "Admin/IncomeManage";
+        return "Admin/UserManage";
+    }
+
+    @GetMapping(value = "/billManage")
+    public String billManage(Model model) {
+        int totalBill = 0, totalPaidBill = 0, totalNonePaidBill = 0, totalBillCanceled = 0;
+        HashMap<Map.Entry<Bill, HashMap<BillProBox, Float>>, Float> billHashMap = new HashMap<>();
+        ArrayList<Bill> bills = billService.getAll();
+        if (bills != null) {
+            for (Bill bill : bills) {
+                totalBill++;
+                if (bill.getStatus().equals("Đã thanh toán")) {
+                    totalPaidBill++;
+                } else if (bill.getStatus().equals("Chưa thanh toán")) {
+                    totalNonePaidBill++;
+                } else {
+                    totalBillCanceled++;
+                }
+            }
+
+            for (Bill bill : bills) {
+                float total = 0;
+                HashMap<BillProBox, Float> hashMap = new HashMap<>();
+                for (BillProBox billProBox : billProBoxService.getByIdBill(bill)) {
+                    hashMap.put(billProBox, billProBox.getSL() * billProBox.getBook().getPrice());
+                    total += billProBox.getSL() * billProBox.getBook().getPrice();
+                }
+                Map.Entry<Bill, HashMap<BillProBox, Float>> billWithProducts = new AbstractMap.SimpleEntry<>(bill, hashMap);
+                billHashMap.put(billWithProducts, total);
+            }
+        }
+        model.addAttribute("bills", billHashMap);
+        model.addAttribute("totalBill", totalBill);
+        model.addAttribute("totalPaidBill", totalPaidBill);
+        model.addAttribute("totalNonePaidBill", totalNonePaidBill);
+        model.addAttribute("totalBillCanceled", totalBillCanceled);
+        return "Admin/BillManage";
     }
 
 }
