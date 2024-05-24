@@ -232,6 +232,5 @@ public class UserController {
             return ResponseEntity.badRequest().body("Mật khẩu quá ngắn");
         }
         return ResponseEntity.badRequest().body("Mật khẩu hiện tại không chính xác");
-
     }
 }
