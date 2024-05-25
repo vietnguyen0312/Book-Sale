@@ -27,6 +27,7 @@
                         <form th:action="@{/user/registerSucess}" th:object="${user}" th:method="post">
                             <input type="hidden" th:field="${user.email}">
                             <input type="hidden" th:field="${user.password}">
+                            <input type="hidden" th:field="${user.address}">
                             <input type="hidden" th:field="${user.username}">
                             <input type="hidden" th:field="${user.sdt}">
                             <button class="btn btn-primary mb-3" id="submitBtn" type="submit">

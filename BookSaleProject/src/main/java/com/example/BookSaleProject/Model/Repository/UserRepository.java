@@ -98,7 +98,7 @@ public class UserRepository {
             prsm.setString(3, user.getEmail());
             prsm.setString(4, user.getSdt());
             prsm.setString(5, user.getAddress());
-            prsm.setInt(6, 2);
+            prsm.setString(6, "USER");
             int result = prsm.executeUpdate();
             con.close();
             return result > 0;

@@ -37,8 +37,7 @@
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" id="location" class="form-control form-control-lg" name="address"
-                    th:field="*{address}" />
+                  <input type="text" id="location" class="form-control form-control-lg" th:field="*{address}" />
                   <label class="form-label" for="location">Nhập địa chỉ</label>
                 </div>
 
@@ -112,18 +111,6 @@
       </div>
     </div>
   </div>
-  <script>
-    $(document).ready(function () {
-      var autocomplete;
-      var id = 'location';
-      autocomplete = new google.maps.places.Autocomplete(document.getElementById(id), {
-        types: ['geocode'],
-      });
-    });
-  </script>
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEIacE7dR8F4pErsabZ_82_WDzM7lrdfI&loading=async&libraries=places&callback=initMap">
-    </script>
 </body>
 
 </html>

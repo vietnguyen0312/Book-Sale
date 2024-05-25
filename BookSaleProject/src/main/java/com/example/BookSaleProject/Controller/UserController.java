@@ -129,6 +129,7 @@ public class UserController {
             @RequestParam(name = "passAgain") String pass) {
         user1.setRole("USER");
         user1.setId(0);
+        System.out.println(user1.toString());
         if (pass.equals(user1.getPassword())) {
             if (userService.getInvalidAttributes(user1).isEmpty() || userService.getInvalidAttributes(user1) == null) {
                 Random random = new Random();
@@ -153,6 +154,7 @@ public class UserController {
 
     @PostMapping(value = "/registerSucess")
     public String registerSucess(Model model, @ModelAttribute(name = "user") User user) {
+        System.out.println(user);
         userService.addNew(user);
         cartService.addNew(new Cart(0, userService.getUserByEmail(user.getEmail())));
         model.addAttribute("Message", "Đăng kí thành công");
