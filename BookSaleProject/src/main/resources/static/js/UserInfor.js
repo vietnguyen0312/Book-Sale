@@ -11,7 +11,7 @@ function changePassword() {
     const newPassword = document.getElementById("newPassword").value;
     const newPasswordAgain = document.getElementById("newPasswordAgain").value;
 
-    if (!currentPassword || !newPassword || !newPasswordAgain) {
+    if (currentPassword === "" || newPassword === "" || newPasswordAgain === "") {
         alert("Vui lòng điền vào tất cả các trường.");
         return;
     }
@@ -22,7 +22,7 @@ function changePassword() {
     }
     const pop = document.querySelector("#popchat");
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/user/changePassword?newPassword=" + newPassword + "$currentPassword=" + currentPassword, true);
+    xhr.open("POST", "/user/changePassword?newPassword=" + newPassword + "&currentPassword=" + currentPassword, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {

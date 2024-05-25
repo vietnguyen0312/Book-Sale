@@ -223,6 +223,8 @@ public class UserController {
             HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = userService.getUserByEmail(session.getAttribute("userEmail").toString());
+        System.out.println(user.getPassword()+" "+currentPassword);
+        System.out.println(user.getPassword().equals(currentPassword));
         if (user.getPassword().equals(currentPassword)) {
             if (userService.checkValidatePass(newPassword)) {
                 user.setPassword(newPassword);
